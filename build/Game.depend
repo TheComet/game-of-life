@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1385853595 source:/home/alex/Documents/programming/game-of-life/game-of-life/App.cpp
+	<App.hpp>
+	<SFML/Window.hpp>
+	<SFML/Graphics.hpp>
+
+1385848721 /home/alex/Documents/programming/game-of-life/game-of-life/App.hpp
+
+1385848688 source:/home/alex/Documents/programming/game-of-life/game-of-life/main.cpp
+	<iostream>
+	<exception>
+	<App.hpp>
+
