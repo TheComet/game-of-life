@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------------
+// include files
+
+#include <SFML/Graphics/RenderWindow.hpp>
+
 namespace sf {
     class RenderWindow;
 }
@@ -11,5 +16,5 @@ public:
     void go();
 private:
 
-    sf::RenderWindow* m_Window;
+    sf::RenderWindow m_Window;
 };
