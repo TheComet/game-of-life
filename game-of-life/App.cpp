@@ -1,4 +1,4 @@
-#include <math.h>
+#include <iostream>
 
 #include <App.hpp>
 #include <LoopTimer.hpp>
@@ -27,7 +27,6 @@ void App::go()
     Background background;
     background.generate( sf::Vector2i(800,600) );
     background.setZoomLimits( 0.25, 4.0 );
-    background.setViewPosition( sf::Vector2i(20,20) );
 
     // setup loop timer
     LoopTimer loopTimer;
@@ -75,8 +74,8 @@ void App::go()
                 if( event.mouseButton.button == sf::Mouse::Right )
                 {
                     isScrolling = true;
-                    pinchScrollPosition.x = viewPosition.x + event.mouseButton.x;
-                    pinchScrollPosition.y = viewPosition.y + event.mouseButton.y;
+                    pinchScrollPosition.x = event.mouseButton.x;
+                    pinchScrollPosition.y = event.mouseButton.y;
                 }
             }
 
@@ -96,8 +95,10 @@ void App::go()
                 // handle scrolling
                 if( isScrolling )
                 {
-                    viewPosition.x = pinchScrollPosition.x + event.mouseMove.x;
-                    viewPosition.y = pinchScrollPosition.y + event.mouseMove.y;
+                    viewPosition.x += event.mouseMove.x - pinchScrollPosition.x;
+                    viewPosition.y += event.mouseMove.y - pinchScrollPosition.y;
+                    pinchScrollPosition.x = event.mouseMove.x;
+                    pinchScrollPosition.y = event.mouseMove.y;
                     background.setViewPosition( viewPosition );
                 }
             }
