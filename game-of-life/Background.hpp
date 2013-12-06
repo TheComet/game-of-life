@@ -52,7 +52,7 @@ public:
      * around"
      * @param position The centre of the rendering area to look at
      */
-    void setViewPosition( const sf::Vector2i& position );
+    void setViewPosition( const sf::Vector2f& position );
 
     /*!
      * @brief Sets the zoom factor
@@ -78,9 +78,8 @@ private:
     sf::Texture m_Texture;
     sf::Sprite m_Sprite;
 
-    sf::Vector2i m_Scroll;
+    sf::Vector2f m_Scroll;
     sf::Vector2i m_ViewSize;
-    sf::Vector2i m_ZoomPosition;
 
     double m_ZoomFactor;
     double m_ZoomMin;

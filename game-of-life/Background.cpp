@@ -10,8 +10,7 @@
 Background::Background() :
     m_ZoomFactor(1.0),
     m_ZoomMin(1.0),
-    m_ZoomMax(1.0),
-    m_Scroll( sf::Vector2i(0,0) )
+    m_ZoomMax(1.0)
 {
 }
 
@@ -60,18 +59,18 @@ void Background::generate( const sf::Vector2i& viewSize )
 }
 
 // ----------------------------------------------------------------------------
-void Background::setViewPosition( const sf::Vector2i& position )
+void Background::setViewPosition( const sf::Vector2f& position )
 {
 
     // wrap the position to 100,100 since that's the maximum size of the tiles
     m_Scroll = position;
-    while( m_Scroll.x > 100.0 ) m_Scroll.x -= 100.0;
-    while( m_Scroll.y > 100.0 ) m_Scroll.y -= 100.0;
-    while( m_Scroll.x < 0.0 ) m_Scroll.x += 100.0;
-    while( m_Scroll.y < 0.0 ) m_Scroll.y += 100.0;
+    while( m_Scroll.x > 100.0f ) m_Scroll.x -= 100.0f;
+    while( m_Scroll.y > 100.0f ) m_Scroll.y -= 100.0f;
+    while( m_Scroll.x < 0.0f ) m_Scroll.x += 100.0f;
+    while( m_Scroll.y < 0.0f ) m_Scroll.y += 100.0f;
 
     // inverse scroll
-    m_Scroll = sf::Vector2i(100,100) - m_Scroll;
+    m_Scroll = sf::Vector2f(100,100) - m_Scroll;
 }
 
 // ----------------------------------------------------------------------------
@@ -100,8 +99,8 @@ void Background::setZoomLimits( double min, double max )
 // ----------------------------------------------------------------------------
 void Background::draw( sf::RenderTarget* target )
 {
-    for( int x = 0-m_Scroll.x; x <= m_ViewSize.x; x += static_cast<int>(100.0*m_ZoomFactor) )
-        for( int y = 0-m_Scroll.y; y <= m_ViewSize.y; y += static_cast<int>(100.0*m_ZoomFactor) )
+    for( float x = 0-(m_Scroll.x*m_ZoomFactor); x <= m_ViewSize.x; x += 100.0f*m_ZoomFactor)
+        for( float y = 0-(m_Scroll.y*m_ZoomFactor); y <= m_ViewSize.y; y += 100.0f*m_ZoomFactor)
         {
             m_Sprite.setPosition( x, y );
             m_Sprite.setScale( m_ZoomFactor, m_ZoomFactor );
