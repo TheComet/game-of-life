@@ -8,6 +8,44 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
 
+#include <vector>
+class Cell
+{
+public:
+    Cell() : m_State(false) {}
+    ~Cell() {}
+
+    void kill() { m_State = false; }
+    void revive() { m_State = true; }
+
+    bool isAlive() { return m_State; }
+
+private:
+    bool m_State;
+    sf::Vector2i m_Coordinate;
+};
+
+class CellMap
+{
+public:
+    CellMap() {}
+    ~CellMap() {}
+
+private:
+    std::vector<Cell> m_CellList;
+};
+
+template <class T>
+class Array2D
+{
+public:
+
+    Array2D() {}
+
+private:
+    std::vector<T> m_Data;
+};
+
 // ----------------------------------------------------------------------------
 App::App() :
     m_Window( sf::VideoMode(800,600), "Game of Life" )
@@ -26,6 +64,7 @@ void App::go()
     // initialise background
     float zoomLimitMax = 2.0f;
     float zoomLimitMin = 0.25f;
+    float zoomSmoothnessFactor = 4.0f;
     Background background;
     background.generate( sf::Vector2i(800,600) );
     background.setZoomLimits( zoomLimitMin, zoomLimitMax );
@@ -34,7 +73,7 @@ void App::go()
     LoopTimer loopTimer;
     loopTimer.setFPS( 60 );
 
-    double currentZoom = 1.0, targetZoom = 1.0;
+    float currentZoom = 1.0f, targetZoom = 1.0f;
     sf::Vector2f viewPosition(0.0f,0.0f);
     sf::Vector2i pinchScrollPosition;
     sf::Vector2i mousePosition;
@@ -49,7 +88,7 @@ void App::go()
         {
 
             // smooth zooming
-            float deltaZoom = (currentZoom-targetZoom)/4.0f;
+            float deltaZoom = (currentZoom-targetZoom)/zoomSmoothnessFactor;
             currentZoom -= deltaZoom;
             background.setZoomFactor( currentZoom );
 
@@ -71,7 +110,7 @@ void App::go()
             // handle zooming
             if( event.type == sf::Event::MouseWheelMoved )
             {
-                targetZoom += event.mouseWheel.delta/50.0;
+                targetZoom += event.mouseWheel.delta/50.0f;
                 if( targetZoom >= zoomLimitMax ) targetZoom = zoomLimitMax;
                 if( targetZoom <= zoomLimitMin ) targetZoom = zoomLimitMin;
             }
