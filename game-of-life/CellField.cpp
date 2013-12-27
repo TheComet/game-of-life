@@ -150,10 +150,10 @@ void CellField::draw( sf::RenderTarget* target, sf::Vector2f viewSize, sf::Vecto
 
     for( int x = m_BoundaryX1; x != m_BoundaryX2; ++x )
         for( int y = m_BoundaryY1; y != m_BoundaryY2; ++y )
-            if( viewPosition.x-static_cast<float>(x) >= -10.0f &&
-                viewPosition.y-static_cast<float>(y) >= -10.0f &&
-                viewPosition.x-static_cast<float>(x) <= viewSize.x &&
-                viewPosition.y-static_cast<float>(y) <= viewSize.y )
+            if( (viewPosition.x+static_cast<float>(x)*10.0f)*zoomFactor >= -10.0f &&
+                (viewPosition.y+static_cast<float>(y)*10.0f)*zoomFactor >= -10.0f &&
+                (viewPosition.x+static_cast<float>(x)*10.0f)*zoomFactor <= viewSize.x &&
+                (viewPosition.y+static_cast<float>(y)*10.0f)*zoomFactor <= viewSize.y )
                 if( m_Cells.at(x,y).isAlive() )
                 {
                     m_CellSprite.setPosition( ((x*10.0f)+viewPosition.x+1.0f)*zoomFactor, ((y*10.0f)+viewPosition.y+1.0f)*zoomFactor ); // shift by 1,1 (1.0*zoomFactor)
