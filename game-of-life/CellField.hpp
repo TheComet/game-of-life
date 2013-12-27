@@ -11,6 +11,9 @@
 #include <Cell.hpp>
 #include <SignedArray2D.hxx>
 
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+
 /*!
  * @brief Simulates the game of life
  */
@@ -67,4 +70,6 @@ public:
 
 private:
     SignedArray2D<Cell> m_Cells;
+    sf::Texture m_CellTexture;
+    sf::Sprite m_CellSprite;
 };
