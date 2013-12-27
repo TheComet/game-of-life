@@ -116,38 +116,6 @@ TEST( TEST_CASE_NAME, SetAndGetDefaultContent )
     ASSERT_EQ( 5, test.getDefaultContent() );
 }
 
-TEST( TEST_CASE_NAME, MirrorX )
-{
-    TEST_CASE_OBJECT test;
-    test.resize(0, 0, 1, 1);
-    test.at(0,0) = 3;
-    test.at(1,0) = 7;
-    test.at(0,1) = 9;
-    test.at(1,1) = 4;
-    test.mirrorX();
-
-    ASSERT_EQ( 7, test.at(0,0) );
-    ASSERT_EQ( 3, test.at(1,0) );
-    ASSERT_EQ( 4, test.at(0,1) );
-    ASSERT_EQ( 9, test.at(1,1) );
-}
-
-TEST( TEST_CASE_NAME, MirrorY )
-{
-    TEST_CASE_OBJECT test;
-    test.resize(0, 0, 1, 1);
-    test.at(0,0) = 3;
-    test.at(1,0) = 7;
-    test.at(0,1) = 9;
-    test.at(1,1) = 4;
-    test.mirrorY();
-
-    ASSERT_EQ( 9, test.at(0,0) );
-    ASSERT_EQ( 4, test.at(1,0) );
-    ASSERT_EQ( 3, test.at(0,1) );
-    ASSERT_EQ( 7, test.at(1,1) );
-}
-
 TEST( TEST_CASE_NAME, AccessWithAt )
 {
     TEST_CASE_OBJECT test;
@@ -158,14 +126,39 @@ TEST( TEST_CASE_NAME, AccessWithAt )
     ASSERT_EQ( 6, test.at(0,0) );
 }
 
-TEST( TEST_CASE_NAME, NegativeResize )
+TEST( TEST_CASE_NAME, NegativeResizeBigger )
 {
     TEST_CASE_OBJECT test;
-    test.resize( -4, -4, -3, -3 );
-    ASSERT_EQ( 0, test.at(-4, -4 ) );
-    ASSERT_EQ( 0, test.at(-4, -3 ) );
-    ASSERT_EQ( 0, test.at(-3, -4 ) );
-    ASSERT_EQ( 0, test.at(-3, -3 ) );
+    test.resize( -1, -1, 0, 0 );
+    test.at(-1,-1) = 4;
+    test.at(-1,0) = 7;
+    test.at(0,-1) = 5;
+    test.at(0,0) = 2;
+
+    test.resize( -2, -2, 0, 0 );
+    ASSERT_EQ( 4, test.at(-1,-1) );
+    ASSERT_EQ( 7, test.at(-1,0) );
+    ASSERT_EQ( 5, test.at(0,-1) );
+    ASSERT_EQ( 2, test.at(0,0) );
+    ASSERT_EQ( 0, test.at(-2,-2) );
+    ASSERT_EQ( 0, test.at(-2,-1) );
+    ASSERT_EQ( 0, test.at(-1,-2) );
+}
+
+TEST( TEST_CASE_NAME, NegativeResizeSmaller )
+{
+    TEST_CASE_OBJECT test;
+    test.resize( -2, -2, 0, 0 );
+    test.at(-1,-1) = 4;
+    test.at(-1,0) = 7;
+    test.at(0,-1) = 5;
+    test.at(0,0) = 2;
+
+    test.resize( -1, -1, 0, 0 );
+    ASSERT_EQ( 4, test.at(-1,-1) );
+    ASSERT_EQ( 7, test.at(-1,0) );
+    ASSERT_EQ( 5, test.at(0,-1) );
+    ASSERT_EQ( 2, test.at(0,0) );
 }
 
 TEST( TEST_CASE_NAME, ExceptionOnIncorrectResize )

@@ -73,16 +73,6 @@ public:
     void resize( int x1, int y1, int x2, int y2 );
 
     /*!
-     * @brief Mirrors the array along its X axis
-     */
-    void mirrorX( void );
-
-    /*!
-     * @brief Mirrors the array along its Y axis
-     */
-    void mirrorY( void );
-
-    /*!
      * @brief Gets the size of the array in the x dimension
      * @return std::size_t of the array's x dimension
      */
@@ -124,5 +114,5 @@ private:
     std::size_t                     m_SizeY;
     int                             m_OffsetX;
     int                             m_OffsetY;
-    std::vector< std::vector<T> >   m_Array; // NOTE: outer vector: x-dimension, inner vector: y-dimension
+    T*                              m_Data;
 };
