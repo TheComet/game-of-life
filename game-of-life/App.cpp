@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 
 #include <App.hpp>
 #include <LoopTimer.hpp>
@@ -39,6 +40,7 @@ void App::go()
     renderList.push_back( &background );
 
     // initialise cell field
+    bool mouseMoveKills = false;
     CellField cellField;
     renderList.push_back( &cellField );
 
@@ -46,8 +48,11 @@ void App::go()
     float currentZoom = 1.0f, targetZoom = 1.0f;
     sf::Vector2f viewPosition(0.0f,0.0f);
     sf::Vector2i pinchScrollPosition;
-    sf::Vector2i mousePosition;
     bool isScrolling = false;
+
+    // mouse states
+    sf::Vector2i mousePosition;
+    bool mouseButton1 = false;
 
     // cell timer, keeps track of when to update to next frame
     int cellTimer = 0;
@@ -107,6 +112,18 @@ void App::go()
             if( event.type == sf::Event::MouseButtonPressed )
             {
 
+                // press mouse
+                if( event.mouseButton.button == sf::Mouse::Left )
+                    mouseButton1 = true;
+
+                // determine if further mouse movement should kill or revive cells
+                int cellX = std::floor( (static_cast<float>(event.mouseButton.x)/currentZoom-viewPosition.x)/10.0f );
+                int cellY = std::floor( (static_cast<float>(event.mouseButton.y)/currentZoom-viewPosition.y)/10.0f );
+                if( cellField.isCellAlive(cellX,cellY) )
+                    mouseMoveKills = true;
+                else
+                    mouseMoveKills = false;
+
                 // begin scrolling
                 if( event.mouseButton.button == sf::Mouse::Right )
                 {
@@ -119,6 +136,10 @@ void App::go()
             // mouse button released
             if( event.type == sf::Event::MouseButtonReleased )
             {
+
+                // release mouse
+                if( event.mouseButton.button == sf::Mouse::Left )
+                    mouseButton1 = false;
 
                 // end scrolling
                 if( event.mouseButton.button == sf::Mouse::Right )
@@ -141,6 +162,23 @@ void App::go()
                     pinchScrollPosition.x = event.mouseMove.x;
                     pinchScrollPosition.y = event.mouseMove.y;
                 }
+
+                // handle killing/reviving cells in edit mode
+                if( isPaused && mouseButton1 )
+                {
+                    int cellX = std::floor( (static_cast<float>(event.mouseMove.x)/currentZoom-viewPosition.x)/10.0f );
+                    int cellY = std::floor( (static_cast<float>(event.mouseMove.y)/currentZoom-viewPosition.y)/10.0f );
+                    if( mouseMoveKills )
+                    {
+                        if( cellField.isCellAlive(cellX,cellY) )
+                            cellField.toggleCell(cellX,cellY);
+                    }else
+                    {
+                        if( !cellField.isCellAlive(cellX,cellY) )
+                            cellField.toggleCell(cellX,cellY);
+                    }
+                }
+
             }
 
             // button presses

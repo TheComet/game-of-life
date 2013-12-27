@@ -92,8 +92,12 @@ private:
 
     /*!
      * @brief Expands the array by a fixed number on every side
+     * The coordinates passed to this function are guaranteed to fit in the
+     * newly resized array
+     * @param x The x-coordinate that must fit into the new array
+     * @param y The y-coordinate that must fit into the new array
      */
-    void expandArray();
+    void expandArray( int x, int y );
 
     /*!
      * @brief Determines the optimal size of the array and resizes it to that

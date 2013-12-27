@@ -26,25 +26,6 @@ CellField::CellField() :
             image.setPixel( x, y, sf::Color(255,255,255) );
     m_CellTexture.loadFromImage( image, sf::IntRect(0,0,8,8) );
     m_CellSprite.setTexture( m_CellTexture );
-
-    m_Cells.resize(0,0,4,4);
-    m_Cells.at(0,0).revive();
-    m_Cells.at(1,0).revive();
-    m_Cells.at(2,0).revive();
-    m_Cells.at(4,0).revive();
-
-    m_Cells.at(0,1).revive();
-
-    m_Cells.at(3,2).revive();
-    m_Cells.at(4,2).revive();
-
-    m_Cells.at(1,3).revive();
-    m_Cells.at(2,3).revive();
-    m_Cells.at(4,3).revive();
-
-    m_Cells.at(0,4).revive();
-    m_Cells.at(2,4).revive();
-    m_Cells.at(4,4).revive();
 }
 
 
@@ -59,7 +40,7 @@ void CellField::toggleCell( int x, int y )
 
     // resize array if necessary
     if( x < m_BoundaryX1+1 || x > m_BoundaryX2-1 || y < m_BoundaryY1+1 || y > m_BoundaryY2-1 )
-        this->expandArray();
+        this->expandArray( x, y );
 
     // toggle
     if( m_Cells.at(x,y).isAlive() )
@@ -100,7 +81,7 @@ void CellField::calculateNextFrame()
             doResize = true;
     }
     if( doResize )
-        this->expandArray();
+        this->expandArray( m_BoundaryX1, m_BoundaryY1 );
 
     // calculate next frame with the help of a temp buffer
     SignedArray2D<Cell> tempCellField( m_Cells );
@@ -182,8 +163,12 @@ void CellField::draw( sf::RenderTarget* target, sf::Vector2f viewSize, sf::Vecto
 }
 
 // ----------------------------------------------------------------------------
-void CellField::expandArray()
+void CellField::expandArray( int x, int y )
 {
+    if( x < m_BoundaryX1 ) m_BoundaryX1 = x;
+    if( x > m_BoundaryX2 ) m_BoundaryX2 = x;
+    if( y < m_BoundaryY1 ) m_BoundaryY1 = y;
+    if( y > m_BoundaryY2 ) m_BoundaryY2 = y;
     m_BoundaryY1 -= 10;
     m_BoundaryX1 -= 10;
     m_BoundaryY2 += 10;
