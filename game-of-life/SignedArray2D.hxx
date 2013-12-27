@@ -84,8 +84,13 @@ void SignedArray2D<T>::resize( int x1, int y1, int x2, int y2 )
 
     // boundary check
     if( x2 < x1 || y2 < y1 )
-        throw Exception( "[SignedArray2D::resize] Error: Rectangle is fucked up, idiot (coordinates are negative)" );
+    {
+        std::stringstream ss; ss << "[SignedArray2D::resize] Error: Rectangle is fucked up, idiot\
+ (coordinates are negative: x1:" << x1 << " y1:" << y1 << " x2:" << x2 << " y2:" << y2;
+        throw Exception( ss.str() );
+    }
 
+    // new sizes
     std::size_t sizeX = x2-x1+1;
     std::size_t sizeY = y2-y1+1;
     std::size_t size = sizeX*sizeY;
@@ -95,15 +100,13 @@ void SignedArray2D<T>::resize( int x1, int y1, int x2, int y2 )
     T* temp = new T[size];
     for( std::size_t x = 0; x != sizeX; ++x )
         for( std::size_t y = 0; y != sizeY; ++y )
-          /*actualX = x+x1;
-            actualY = y+y1;
-            oldActualX = x+m_OffsetX;
-            oldActualY = y+m_OffsetY;*/
-            if( static_cast<int>(x)+m_OffsetX >= 0 &&
-                static_cast<int>(y)+m_OffsetY >= 0 &&
-                static_cast<int>(x)+m_OffsetX < static_cast<int>(m_SizeX) &&
-                static_cast<int>(y)+m_OffsetY < static_cast<int>(m_SizeY))
-                temp[x*sizeY+y] = m_Data[(x+m_OffsetX)*m_SizeY+y+m_OffsetY];
+            if( static_cast<int>(x)-m_OffsetX+x1 >= 0 && // casts are necessary because the result of an arithmetic
+                                                         // calculation with an int and a size_t results in a size_t
+                                                         // for some reason
+                static_cast<int>(y)-m_OffsetY+y1 >= 0 &&
+                static_cast<int>(x)-m_OffsetX+x1 < static_cast<int>(m_SizeX) &&
+                static_cast<int>(y)-m_OffsetY+y1 < static_cast<int>(m_SizeY))
+                temp[x*sizeY+y] = m_Data[(x-m_OffsetX+x1)*m_SizeY+y-m_OffsetY+y1];
             else
                 temp[x*sizeY+y] = m_DefaultContent;
     if( m_Data )
