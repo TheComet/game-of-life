@@ -27,13 +27,26 @@ CellField::CellField() :
     m_CellTexture.loadFromImage( image, sf::IntRect(0,0,8,8) );
     m_CellSprite.setTexture( m_CellTexture );
 
-    m_Cells.resize(0,0,2,2);
+    m_Cells.resize(0,0,4,4);
     m_Cells.at(0,0).revive();
     m_Cells.at(1,0).revive();
-    m_Cells.at(1,1).revive();
-    m_Cells.at(1,2).revive();
-    m_Cells.at(2,1).revive();
+    m_Cells.at(2,0).revive();
+    m_Cells.at(4,0).revive();
+
+    m_Cells.at(0,1).revive();
+
+    m_Cells.at(3,2).revive();
+    m_Cells.at(4,2).revive();
+
+    m_Cells.at(1,3).revive();
+    m_Cells.at(2,3).revive();
+    m_Cells.at(4,3).revive();
+
+    m_Cells.at(0,4).revive();
+    m_Cells.at(2,4).revive();
+    m_Cells.at(4,4).revive();
 }
+
 
 // ----------------------------------------------------------------------------
 CellField::~CellField()

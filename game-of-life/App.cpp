@@ -52,6 +52,9 @@ void App::go()
     // cell timer, keeps track of when to update to next frame
     int cellTimer = 0;
 
+    // speed of simulation
+    int simulationSpeed = 5;
+
     // set to true when the game is paused
     bool isPaused = true;
 
@@ -76,9 +79,7 @@ void App::go()
             viewPosition.y += static_cast<float>(mousePosition.y)*deltaZoom/(currentZoom*currentZoom);
 
             // calculate next frame if time has come
-            if( isPaused )
-                cellTimer = 0;
-            if( ++cellTimer == 5 )
+            if( !isPaused && cellTimer++ >= simulationSpeed )
             {
                 cellTimer = 0;
                 cellField.calculateNextFrame();
@@ -149,6 +150,16 @@ void App::go()
                 // pause/resume with space
                 if( event.key.code == sf::Keyboard::Space )
                     isPaused = 1-isPaused;
+
+                // increase simulation speed
+                if( event.key.code == sf::Keyboard::Up )
+                    if( simulationSpeed > 0 )
+                        --simulationSpeed;
+
+                // decrease simulation speed
+                if( event.key.code == sf::Keyboard::Down )
+                    if( simulationSpeed < 60 )
+                        ++simulationSpeed;
             }
 
         }
