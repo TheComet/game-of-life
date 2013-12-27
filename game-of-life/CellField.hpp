@@ -33,6 +33,26 @@ public:
     ~CellField();
 
     /*!
+     * @brief Toggles a cell at the specified coordinates
+     * If the cell is out of bounds of the internal array, and the cell is
+     * being brought to life, said array is simply expanded so it fits.
+     * Note that the array might also shrink if cells are removed.
+     * @param x The x-coordinate of the cell to toggle
+     * @param y The y-coordinate of the cell to toggle
+     */
+    void toggleCell( int x, int y );
+
+    /*!
+     * @brief Returns the state of a cell at the specified coordinates
+     * If the coordinates of the cell are out of bounds of the internal array,
+     * "false" is returned.
+     * @param x The x-coordinate of the cell
+     * @param y The y-coordinate of the cell
+     * @return True if the cell is alive, false if otherwise
+     */
+    bool isCellAlive( int x, int y );
+
+    /*!
      * @brief Calculates the next frame according to Conway's rules
      */
     void calculateNextFrame();
@@ -69,7 +89,23 @@ public:
     void draw( sf::RenderTarget* target, sf::Vector2f viewSize, sf::Vector2f viewPosition, float zoomFactor );
 
 private:
+
+    /*!
+     * @brief Expands the array by a fixed number on every side
+     */
+    void expandArray();
+
+    /*!
+     * @brief Determines the optimal size of the array and resizes it to that
+     */
+    void optimumArrayResize();
+
     SignedArray2D<Cell> m_Cells;
     sf::Texture m_CellTexture;
     sf::Sprite m_CellSprite;
+
+    int m_BoundaryX1;
+    int m_BoundaryY1;
+    int m_BoundaryX2;
+    int m_BoundaryY2;
 };

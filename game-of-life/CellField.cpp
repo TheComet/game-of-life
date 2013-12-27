@@ -11,7 +11,11 @@
 
 // ----------------------------------------------------------------------------
 CellField::CellField() :
-    m_Cells( Cell() ) // fill array with dead cells by default
+    m_Cells( Cell() ), // fill array with dead cells by default
+    m_BoundaryX1(0),
+    m_BoundaryY1(0),
+    m_BoundaryX2(1),
+    m_BoundaryY2(1)
 {
 
     // generate 8x8 image for a single cell
@@ -22,6 +26,13 @@ CellField::CellField() :
             image.setPixel( x, y, sf::Color(255,255,255) );
     m_CellTexture.loadFromImage( image, sf::IntRect(0,0,8,8) );
     m_CellSprite.setTexture( m_CellTexture );
+
+    m_Cells.resize(0,0,2,2);
+    m_Cells.at(0,0).revive();
+    m_Cells.at(1,0).revive();
+    m_Cells.at(1,1).revive();
+    m_Cells.at(1,2).revive();
+    m_Cells.at(2,1).revive();
 }
 
 // ----------------------------------------------------------------------------
@@ -30,47 +41,145 @@ CellField::~CellField()
 }
 
 // ----------------------------------------------------------------------------
+void CellField::toggleCell( int x, int y )
+{
+
+    // resize array if necessary
+    if( x < m_BoundaryX1+1 || x > m_BoundaryX2-1 || y < m_BoundaryY1+1 || y > m_BoundaryY2-1 )
+        this->expandArray();
+
+    // toggle
+    if( m_Cells.at(x,y).isAlive() )
+        m_Cells.at(x,y).kill();
+    else
+        m_Cells.at(x,y).revive();
+}
+
+// ----------------------------------------------------------------------------
+bool CellField::isCellAlive( int x, int y )
+{
+
+    // out of range
+    if( x < m_BoundaryX1+1 || x > m_BoundaryX2-1 || y < m_BoundaryY1+1 || y > m_BoundaryY2-1 )
+        return false;
+
+    return m_Cells.at(x,y).isAlive();
+}
+
+// ----------------------------------------------------------------------------
 void CellField::calculateNextFrame()
 {
+
+    // resize if any cells are touching the outer boundaries of the array
+    bool doResize = false;
+    for( int n = m_BoundaryX1; n != m_BoundaryX2; ++n )
+    {
+        if( m_Cells.at(n,m_BoundaryY1).isAlive() )
+            doResize = true;
+        if( m_Cells.at(n,m_BoundaryY2).isAlive() )
+            doResize = true;
+    }
+    for( int n = m_BoundaryY1; n != m_BoundaryY2; ++n )
+    {
+        if( m_Cells.at(m_BoundaryX1, n).isAlive() )
+            doResize = true;
+        if( m_Cells.at(m_BoundaryX2, n).isAlive() )
+            doResize = true;
+    }
+    if( doResize )
+        this->expandArray();
+
+    // calculate next frame with the help of a temp buffer
+    SignedArray2D<Cell> tempCellField( m_Cells );
+    for( int x = m_BoundaryX1+1; x != m_BoundaryX2; ++x )
+        for( int y = m_BoundaryY1+1; y != m_BoundaryY2; ++y )
+        {
+
+            // count neighbours
+            int neighbours = 0;
+            for( int nx = x-1; nx != x+2; ++nx )
+                for( int ny = y-1; ny != y+2; ++ny )
+                    if( tempCellField.at(nx,ny).isAlive() )
+                        ++neighbours;
+
+            // selected cell is alive
+            if( tempCellField.at(x,y).isAlive() )
+            {
+
+                // counting algorithm above also counts selected cell.
+                // resolve this issue
+                --neighbours;
+
+                // less than 2 or more than 3 neighbours kills selected cell
+                if( neighbours < 2 || neighbours > 3 )
+                    m_Cells.at(x,y).kill();
+
+            // selected cell is dead
+            } else
+            {
+
+                // exactly 3 neighbours revives selected cell
+                if( neighbours == 3 )
+                    m_Cells.at(x,y).revive();
+            }
+        }
+
 }
 
 // ----------------------------------------------------------------------------
 void CellField::calculatePreviousFrame()
 {
+    std::cout << "this doesn't twerk yet" << std::endl;
 }
 
 // ----------------------------------------------------------------------------
 sf::Vector2u CellField::getSize()
 {
-    return sf::Vector2u( m_Cells.sizeX(), m_Cells.sizeY() );
+    return sf::Vector2u( m_BoundaryX2-m_BoundaryX1, m_BoundaryY2-m_BoundaryY1 );
 }
 
 // ----------------------------------------------------------------------------
 std::size_t CellField::getSizeX()
 {
-    return m_Cells.sizeX();
+    return m_BoundaryX2-m_BoundaryX1;
 }
 
 // ----------------------------------------------------------------------------
 std::size_t CellField::getSizeY()
 {
-    return m_Cells.sizeY();
+    return m_BoundaryY2-m_BoundaryY1;
 }
 
 // ----------------------------------------------------------------------------
 void CellField::draw( sf::RenderTarget* target, sf::Vector2f viewSize, sf::Vector2f viewPosition, float zoomFactor )
 {
 
-    for( std::size_t x = 0; x != m_Cells.sizeX(); ++x )
-        for( std::size_t y = 0; y != m_Cells.sizeY(); ++y )
+    for( int x = m_BoundaryX1; x != m_BoundaryX2; ++x )
+        for( int y = m_BoundaryY1; y != m_BoundaryY2; ++y )
             if( viewPosition.x-static_cast<float>(x) >= -10.0f &&
                 viewPosition.y-static_cast<float>(y) >= -10.0f &&
                 viewPosition.x-static_cast<float>(x) <= viewSize.x &&
                 viewPosition.y-static_cast<float>(y) <= viewSize.y )
                 if( m_Cells.at(x,y).isAlive() )
                 {
-                    m_CellSprite.setPosition( (x+viewPosition.x+1.0f)*zoomFactor, (y+viewPosition.y+1.0f)*zoomFactor ); // shift by 1,1 (1.0*zoomFactor)
+                    m_CellSprite.setPosition( ((x*10.0f)+viewPosition.x+1.0f)*zoomFactor, ((y*10.0f)+viewPosition.y+1.0f)*zoomFactor ); // shift by 1,1 (1.0*zoomFactor)
                     m_CellSprite.setScale( zoomFactor, zoomFactor );
                     target->draw( m_CellSprite );
                 }
+}
+
+// ----------------------------------------------------------------------------
+void CellField::expandArray()
+{
+    m_BoundaryY1 -= 10;
+    m_BoundaryX1 -= 10;
+    m_BoundaryY2 += 10;
+    m_BoundaryX2 += 10;
+    m_Cells.resize( m_BoundaryX1, m_BoundaryY1, m_BoundaryX2, m_BoundaryY2 );
+}
+
+// ----------------------------------------------------------------------------
+void CellField::optimumArrayResize()
+{
+    // TODO smart resizing
 }

@@ -8,6 +8,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Keyboard.hpp>
 
 #include <vector>
 
@@ -48,7 +49,13 @@ void App::go()
     sf::Vector2i mousePosition;
     bool isScrolling = false;
 
-    // setup loop timer
+    // cell timer, keeps track of when to update to next frame
+    int cellTimer = 0;
+
+    // set to true when the game is paused
+    bool isPaused = true;
+
+    // set up loop timer
     LoopTimer loopTimer;
     loopTimer.setFPS( 60 );
 
@@ -67,6 +74,15 @@ void App::go()
             // adjust view position so zoom occurs under mouse
             viewPosition.x += static_cast<float>(mousePosition.x)*deltaZoom/(currentZoom*currentZoom);
             viewPosition.y += static_cast<float>(mousePosition.y)*deltaZoom/(currentZoom*currentZoom);
+
+            // calculate next frame if time has come
+            if( isPaused )
+                cellTimer = 0;
+            if( ++cellTimer == 5 )
+            {
+                cellTimer = 0;
+                cellField.calculateNextFrame();
+            }
         }
 
         // check all the window's events that were triggered since the last iteration of the loop
@@ -124,6 +140,15 @@ void App::go()
                     pinchScrollPosition.x = event.mouseMove.x;
                     pinchScrollPosition.y = event.mouseMove.y;
                 }
+            }
+
+            // button presses
+            if( event.type == sf::Event::KeyPressed )
+            {
+
+                // pause/resume with space
+                if( event.key.code == sf::Keyboard::Space )
+                    isPaused = 1-isPaused;
             }
 
         }
