@@ -26,15 +26,20 @@ App::~App()
 void App::go()
 {
 
+    // list of objects to render every frame
+    std::vector<Drawable*> renderList;
+
     // initialise background
     float zoomLimitMax = 2.0f;
     float zoomLimitMin = 0.25f;
     float zoomSmoothnessFactor = 4.0f;
     Background background;
     background.generate();
+    renderList.push_back( &background );
 
     // initialise cell field
     CellField cellField;
+    renderList.push_back( &cellField );
 
     // set up zooming parameters
     float currentZoom = 1.0f, targetZoom = 1.0f;
@@ -123,8 +128,9 @@ void App::go()
 
         }
 
-        // draw everything
-        background.draw( &m_Window, sf::Vector2f(800,600), viewPosition, currentZoom );
+        // draw everything to render window
+        for( std::vector<Drawable*>::iterator it = renderList.begin(); it != renderList.end(); ++it )
+            (*it)->draw( &m_Window, sf::Vector2f(800,600), viewPosition, currentZoom );
 
         // end the current frame
         m_Window.display();
