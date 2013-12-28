@@ -140,14 +140,26 @@ SignedArray2D<T>& SignedArray2D<T>::operator=( const SignedArray2D<T>& that )
 {
     if( &that == this ) return *this;
 
-    // re-allocate with same size and copy data across
-    std::size_t size = that.m_SizeX*that.m_SizeY;
-    T* temp = new T[size];
-    for( std::size_t i = 0; i != size; ++i )
-        *(temp+i) = *(that.m_Data+i);
-    if( m_Data )
-        delete[] m_Data;
-    m_Data = temp;
+    // see if re-allocation is necessary
+    if( m_SizeX != that.m_SizeX || m_SizeY != that.m_SizeY )
+    {
+
+        // re-allocate with same size and copy data across
+        std::size_t size = that.m_SizeX*that.m_SizeY;
+        T* temp = new T[size];
+        for( std::size_t i = 0; i != size; ++i )
+            *(temp+i) = *(that.m_Data+i);
+        if( m_Data )
+            delete[] m_Data;
+        m_Data = temp;
+
+    // simply copy data directly
+    }else
+    {
+        std::size_t size = m_SizeX*m_SizeY;
+        for( std::size_t i = 0; i != size; ++i )
+            *(m_Data+i) = *(that.m_Data+i);
+    }
 
     // other member data
     m_SizeX = that.m_SizeX;

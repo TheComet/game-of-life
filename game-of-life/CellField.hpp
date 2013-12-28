@@ -95,8 +95,12 @@ public:
 
     /*!
      * @brief Determines the optimal size of the array and resizes it to that
+     * By default, the optimum resize is only calculated if cells are pushing
+     * on the boundaries of the array. Optionally, it's possible to force the
+     * algorithm to calculate the optimum resize.
+     * @param forceResize Forces the calculation of an optimum resize.
      */
-    void optimumArrayResize();
+    void optimumArrayResize( bool forceResize = false );
 
 private:
 
@@ -109,7 +113,8 @@ private:
      */
     void expandArray( int x, int y );
 
-    SignedArray2D<Cell> m_Cells;
+    SignedArray2D<Cell> m_CellBuffer[2];
+
     sf::Texture m_CellTexture;
     sf::Sprite m_CellSprite;
 

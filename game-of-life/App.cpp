@@ -201,7 +201,7 @@ void App::go()
                 if( event.key.code == sf::Keyboard::Space )
                 {
                     isPaused = 1-isPaused;
-                    cellField.optimumArrayResize(); // cleans up unnecessary array space
+                    cellField.optimumArrayResize(true); // cleans up unnecessary array space
                 }
 
                 // increase simulation speed
