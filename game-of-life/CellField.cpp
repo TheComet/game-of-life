@@ -211,21 +211,21 @@ void CellField::optimumArrayResize()
             // reduce bottom boundary
             bool contract = true;
             for( int n = m_BoundaryX1; n != m_BoundaryX2; ++n )
-                if( m_Cells.at(n,m_BoundaryY1).isAlive() )
+                if( m_Cells.at(n,m_BoundaryY1).isAlive() || m_Cells.at(n,m_BoundaryY1+1).isAlive() )
                 {
                     contract = false;
                     break;
                 }
             if( contract )
             {
-                ++m_BoundaryX1;
+                ++m_BoundaryY1;
                 found = false;
             }
 
             // reduce top boundary
             contract = true;
             for( int n = m_BoundaryX1; n != m_BoundaryX2; ++n )
-                if( !m_Cells.at(n,m_BoundaryY2).isAlive() )
+                if( m_Cells.at(n,m_BoundaryY2).isAlive() || m_Cells.at(n,m_BoundaryY2-1).isAlive() )
                 {
                     contract = false;
                     break;
@@ -239,7 +239,7 @@ void CellField::optimumArrayResize()
             // reduce left boundary
             contract = true;
             for( int n = m_BoundaryY1; n != m_BoundaryY2; ++n)
-                if( !m_Cells.at(m_BoundaryX1,n).isAlive() )
+                if( m_Cells.at(m_BoundaryX1,n).isAlive() || m_Cells.at(m_BoundaryX1+1,n).isAlive() )
                 {
                     contract = false;
                     break;
@@ -253,7 +253,7 @@ void CellField::optimumArrayResize()
             // reduce right boundary
             contract = true;
             for( int n = m_BoundaryY1; n != m_BoundaryY2; ++ n)
-                if( !m_Cells.at(m_BoundaryX2,n).isAlive() )
+                if( m_Cells.at(m_BoundaryX2,n).isAlive() || m_Cells.at(m_BoundaryX2-1,n).isAlive() )
                 {
                     contract = false;
                     break;
