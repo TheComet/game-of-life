@@ -161,6 +161,24 @@ TEST( TEST_CASE_NAME, NegativeResizeSmaller )
     ASSERT_EQ( 2, test.at(0,0) );
 }
 
+TEST( TEST_CASE_NAME, TotalResize )
+{
+    TEST_CASE_OBJECT test;
+    test.resize( 0, 0, 1, 1 );
+    test.at(0,0) = 4;
+    test.at(0,1) = 7;
+    test.at(1,0) = 5;
+    test.at(1,1) = 2;
+
+    test.resize( -10, -10, 10, 10 );
+    ASSERT_EQ( 4, test.at(0,0) );
+    ASSERT_EQ( 7, test.at(0,1) );
+    ASSERT_EQ( 5, test.at(1,0) );
+    ASSERT_EQ( 2, test.at(1,1) );
+    ASSERT_EQ( 21, test.sizeX() );
+    ASSERT_EQ( 21, test.sizeY() );
+}
+
 TEST( TEST_CASE_NAME, ExceptionOnIncorrectResize )
 {
     TEST_CASE_OBJECT test;

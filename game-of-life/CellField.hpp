@@ -63,6 +63,11 @@ public:
     void calculatePreviousFrame();
 
     /*!
+     * @brief Resets the field and frees all memory
+     */
+    void reset();
+
+    /*!
      * @brief Returns the total size of the cell field as an unsigned 2D vector
      * @note The size of the field will grow over time
      * @return The size of the field

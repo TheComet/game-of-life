@@ -68,16 +68,24 @@ void CellField::calculateNextFrame()
     bool doResize = false;
     for( int n = m_BoundaryX1; n != m_BoundaryX2; ++n )
     {
-        if( m_Cells.at(n,m_BoundaryY1).isAlive() )
+        if( m_Cells.at(n, m_BoundaryY1).isAlive() )
             doResize = true;
-        if( m_Cells.at(n,m_BoundaryY2).isAlive() )
+        if( m_Cells.at(n, m_BoundaryY1+1).isAlive() )
+            doResize = true;
+        if( m_Cells.at(n, m_BoundaryY2).isAlive() )
+            doResize = true;
+        if( m_Cells.at(n, m_BoundaryY2-1).isAlive() )
             doResize = true;
     }
     for( int n = m_BoundaryY1; n != m_BoundaryY2; ++n )
     {
         if( m_Cells.at(m_BoundaryX1, n).isAlive() )
             doResize = true;
+        if( m_Cells.at(m_BoundaryX1+1, n).isAlive() )
+            doResize = true;
         if( m_Cells.at(m_BoundaryX2, n).isAlive() )
+            doResize = true;
+        if( m_Cells.at(m_BoundaryX2-1, n).isAlive() )
             doResize = true;
     }
     if( doResize )
@@ -127,6 +135,16 @@ void CellField::calculatePreviousFrame()
 }
 
 // ----------------------------------------------------------------------------
+void CellField::reset()
+{
+    m_BoundaryX1 = 0;
+    m_BoundaryY1 = 0;
+    m_BoundaryX2 = 1;
+    m_BoundaryY1 = 1;
+    m_Cells = SignedArray2D<Cell>();
+}
+
+// ----------------------------------------------------------------------------
 sf::Vector2u CellField::getSize()
 {
     return sf::Vector2u( m_BoundaryX2-m_BoundaryX1, m_BoundaryY2-m_BoundaryY1 );
@@ -169,10 +187,11 @@ void CellField::expandArray( int x, int y )
     if( x > m_BoundaryX2 ) m_BoundaryX2 = x;
     if( y < m_BoundaryY1 ) m_BoundaryY1 = y;
     if( y > m_BoundaryY2 ) m_BoundaryY2 = y;
-    m_BoundaryY1 -= 10;
     m_BoundaryX1 -= 10;
-    m_BoundaryY2 += 10;
+    m_BoundaryY1 -= 10;
     m_BoundaryX2 += 10;
+    m_BoundaryY2 += 10;
+
     m_Cells.resize( m_BoundaryX1, m_BoundaryY1, m_BoundaryX2, m_BoundaryY2 );
 }
 

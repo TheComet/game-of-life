@@ -198,6 +198,11 @@ void App::go()
                 if( event.key.code == sf::Keyboard::Down )
                     if( simulationSpeed < 60 )
                         ++simulationSpeed;
+
+                // reset field
+                if( event.key.code == sf::Keyboard::Delete )
+                    if( isPaused )
+                        cellField.reset();
             }
 
         }
