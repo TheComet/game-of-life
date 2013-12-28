@@ -72,6 +72,7 @@ void App::go()
     {
 
         // update game logic
+        int maxUpdateLoops = 0;
         while( loopTimer.isTimeToUpdate() )
         {
 
@@ -89,6 +90,10 @@ void App::go()
                 cellTimer = 0;
                 cellField.calculateNextFrame();
             }
+
+            // limit amount of update loops allowed
+            if( ++maxUpdateLoops == 10 )
+                break;
         }
 
         // check all the window's events that were triggered since the last iteration of the loop
