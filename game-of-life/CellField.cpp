@@ -64,32 +64,7 @@ bool CellField::isCellAlive( int x, int y )
 void CellField::calculateNextFrame()
 {
 
-    // resize if any cells are touching the outer boundaries of the array
-    bool doResize = false;
-    for( int n = m_BoundaryX1; n != m_BoundaryX2; ++n )
-    {
-        if( m_Cells.at(n, m_BoundaryY1).isAlive() )
-            doResize = true;
-        if( m_Cells.at(n, m_BoundaryY1+1).isAlive() )
-            doResize = true;
-        if( m_Cells.at(n, m_BoundaryY2).isAlive() )
-            doResize = true;
-        if( m_Cells.at(n, m_BoundaryY2-1).isAlive() )
-            doResize = true;
-    }
-    for( int n = m_BoundaryY1; n != m_BoundaryY2; ++n )
-    {
-        if( m_Cells.at(m_BoundaryX1, n).isAlive() )
-            doResize = true;
-        if( m_Cells.at(m_BoundaryX1+1, n).isAlive() )
-            doResize = true;
-        if( m_Cells.at(m_BoundaryX2, n).isAlive() )
-            doResize = true;
-        if( m_Cells.at(m_BoundaryX2-1, n).isAlive() )
-            doResize = true;
-    }
-    if( doResize )
-        this->expandArray( m_BoundaryX1, m_BoundaryY1 );
+    this->optimumArrayResize();
 
     // calculate next frame with the help of a temp buffer
     SignedArray2D<Cell> tempCellField( m_Cells );
@@ -198,5 +173,81 @@ void CellField::expandArray( int x, int y )
 // ----------------------------------------------------------------------------
 void CellField::optimumArrayResize()
 {
-    // TODO smart resizing
+
+    // resize if any cells are touching the outer boundaries of the array
+    bool doResize = false;
+    for( int n = m_BoundaryX1; n != m_BoundaryX2; ++n )
+    {
+        if( m_Cells.at(n, m_BoundaryY1).isAlive() )
+            doResize = true;
+        if( m_Cells.at(n, m_BoundaryY1+1).isAlive() )
+            doResize = true;
+        if( m_Cells.at(n, m_BoundaryY2).isAlive() )
+            doResize = true;
+        if( m_Cells.at(n, m_BoundaryY2-1).isAlive() )
+            doResize = true;
+    }
+    for( int n = m_BoundaryY1; n != m_BoundaryY2; ++n )
+    {
+        if( m_Cells.at(m_BoundaryX1, n).isAlive() )
+            doResize = true;
+        if( m_Cells.at(m_BoundaryX1+1, n).isAlive() )
+            doResize = true;
+        if( m_Cells.at(m_BoundaryX2, n).isAlive() )
+            doResize = true;
+        if( m_Cells.at(m_BoundaryX2-1, n).isAlive() )
+            doResize = true;
+    }
+
+    // only check for optimum size if a resize is necessary
+    if( doResize )
+    {
+
+        // reduce boundaries until a live cell is found
+        while( m_BoundaryY1 < m_BoundaryY2 && m_BoundaryX1 < m_BoundaryX2 )
+        {
+            bool found = true;
+
+            // reduce top and bottom boundaries
+            for( int n = m_BoundaryX1; n != m_BoundaryX2; ++n )
+            {
+                if( !m_Cells.at(n,m_BoundaryY1).isAlive() )
+                {
+                    ++m_BoundaryY1;
+                    found = false;
+                    break;
+                }
+                if( m_Cells.at(n,m_BoundaryY2).isAlive() )
+                {
+                    --m_BoundaryY2;
+                    found = false;
+                    break;
+                }
+            }
+
+            // reduce left and right boundaries
+            for( int n = m_BoundaryY1; n != m_BoundaryY2; ++n)
+            {
+                if( m_Cells.at(m_BoundaryX1,n).isAlive() )
+                {
+                    ++m_BoundaryX1;
+                    found = false;
+                    break;
+                }
+                if( m_Cells.at(m_BoundaryX2,n).isAlive() )
+                {
+                    --m_BoundaryX2;
+                    found = false;
+                    break;
+                }
+            }
+
+            // cells were found on all four sides
+            if( found )
+                break;
+        }
+
+        // finally, expand array
+        this->expandArray( m_BoundaryX1, m_BoundaryY1 );
+    }
 }
