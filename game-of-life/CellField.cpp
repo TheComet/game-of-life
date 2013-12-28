@@ -208,38 +208,60 @@ void CellField::optimumArrayResize()
         {
             bool found = true;
 
-            // reduce top and bottom boundaries
+            // reduce bottom boundary
+            bool contract = true;
             for( int n = m_BoundaryX1; n != m_BoundaryX2; ++n )
+                if( m_Cells.at(n,m_BoundaryY1).isAlive() )
+                {
+                    contract = false;
+                    break;
+                }
+            if( contract )
             {
-                if( !m_Cells.at(n,m_BoundaryY1).isAlive() )
-                {
-                    ++m_BoundaryY1;
-                    found = false;
-                    break;
-                }
-                if( m_Cells.at(n,m_BoundaryY2).isAlive() )
-                {
-                    --m_BoundaryY2;
-                    found = false;
-                    break;
-                }
+                ++m_BoundaryX1;
+                found = false;
             }
 
-            // reduce left and right boundaries
-            for( int n = m_BoundaryY1; n != m_BoundaryY2; ++n)
+            // reduce top boundary
+            contract = true;
+            for( int n = m_BoundaryX1; n != m_BoundaryX2; ++n )
+                if( !m_Cells.at(n,m_BoundaryY2).isAlive() )
+                {
+                    contract = false;
+                    break;
+                }
+            if( contract )
             {
-                if( m_Cells.at(m_BoundaryX1,n).isAlive() )
+                --m_BoundaryY2;
+                found = false;
+            }
+
+            // reduce left boundary
+            contract = true;
+            for( int n = m_BoundaryY1; n != m_BoundaryY2; ++n)
+                if( !m_Cells.at(m_BoundaryX1,n).isAlive() )
                 {
-                    ++m_BoundaryX1;
-                    found = false;
+                    contract = false;
                     break;
                 }
-                if( m_Cells.at(m_BoundaryX2,n).isAlive() )
+            if( contract )
+            {
+                ++m_BoundaryX1;
+                found = false;
+            }
+
+            // reduce right boundary
+            contract = true;
+            for( int n = m_BoundaryY1; n != m_BoundaryY2; ++ n)
+                if( !m_Cells.at(m_BoundaryX2,n).isAlive() )
                 {
-                    --m_BoundaryX2;
-                    found = false;
+                    contract = false;
                     break;
                 }
+            if( contract )
+            {
+                --m_BoundaryX2;
+                found = false;
             }
 
             // cells were found on all four sides
