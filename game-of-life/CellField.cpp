@@ -25,6 +25,7 @@ CellField::CellField() :
         for( unsigned int y = 0; y != 8; ++y )
             image.setPixel( x, y, sf::Color(255,255,255) );
     m_CellTexture.loadFromImage( image, sf::IntRect(0,0,8,8) );
+    m_CellTexture.setSmooth( true );
     m_CellSprite.setTexture( m_CellTexture );
 }
 

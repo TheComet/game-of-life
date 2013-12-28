@@ -93,6 +93,11 @@ public:
      */
     void draw( sf::RenderTarget* target, sf::Vector2f viewSize, sf::Vector2f viewPosition, float zoomFactor );
 
+    /*!
+     * @brief Determines the optimal size of the array and resizes it to that
+     */
+    void optimumArrayResize();
+
 private:
 
     /*!
@@ -103,11 +108,6 @@ private:
      * @param y The y-coordinate that must fit into the new array
      */
     void expandArray( int x, int y );
-
-    /*!
-     * @brief Determines the optimal size of the array and resizes it to that
-     */
-    void optimumArrayResize();
 
     SignedArray2D<Cell> m_Cells;
     sf::Texture m_CellTexture;

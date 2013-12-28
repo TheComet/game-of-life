@@ -33,7 +33,7 @@ void App::go()
 
     // initialise background
     float zoomLimitMax = 2.0f;
-    float zoomLimitMin = 0.25f;
+    float zoomLimitMin = 0.0625f;
     float zoomSmoothnessFactor = 4.0f;
     Background background;
     background.generate();
@@ -199,7 +199,10 @@ void App::go()
 
                 // pause/resume with space
                 if( event.key.code == sf::Keyboard::Space )
+                {
                     isPaused = 1-isPaused;
+                    cellField.optimumArrayResize(); // cleans up unnecessary array space
+                }
 
                 // increase simulation speed
                 if( event.key.code == sf::Keyboard::Up )
