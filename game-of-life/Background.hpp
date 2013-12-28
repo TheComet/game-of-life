@@ -53,5 +53,6 @@ public:
 
 private:
     sf::Texture m_Texture;
+    sf::Texture m_ZoomedOutTexture;
     sf::Sprite m_Sprite;
 };
