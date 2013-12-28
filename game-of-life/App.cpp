@@ -125,9 +125,16 @@ void App::go()
                 int cellX = std::floor( (static_cast<float>(event.mouseButton.x)/currentZoom-viewPosition.x)/10.0f );
                 int cellY = std::floor( (static_cast<float>(event.mouseButton.y)/currentZoom-viewPosition.y)/10.0f );
                 if( cellField.isCellAlive(cellX,cellY) )
+                {
                     mouseMoveKills = true;
-                else
+                    if( mouseButton1 && isPaused && cellField.isCellAlive(cellX,cellY) )
+                        cellField.toggleCell(cellX,cellY);
+                }else
+                {
                     mouseMoveKills = false;
+                    if( mouseButton1 && isPaused && !cellField.isCellAlive(cellX,cellY) )
+                        cellField.toggleCell(cellX,cellY);
+                }
 
                 // begin scrolling
                 if( event.mouseButton.button == sf::Mouse::Right )
