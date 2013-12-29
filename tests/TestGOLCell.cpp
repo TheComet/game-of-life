@@ -12,7 +12,7 @@
 // --------------------------------------------------------------
 // define test fixtures
 
-#define TEST_CASE_NAME TestGraphNode
+#define TEST_CASE_NAME TestGOLCell
 #define TEST_CASE_OBJECT Cell<int>
 
 using namespace GOL;
