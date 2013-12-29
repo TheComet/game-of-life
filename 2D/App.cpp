@@ -33,7 +33,7 @@ void App::go()
 
     // initialise background
     float zoomLimitMax = 2.0f;
-    float zoomLimitMin = 0.0625f;
+    float zoomLimitMin = 0.125f;
     float zoomSmoothnessFactor = 4.0f;
     Background background;
     background.generate();
@@ -202,6 +202,7 @@ void App::go()
                 {
                     isPaused = 1-isPaused;
                     cellField.optimumArrayResize(true); // cleans up unnecessary array space
+                    cellField.regenerateActiveCellList(); // required after manipulating cells externally
                 }
 
                 // increase simulation speed
@@ -221,6 +222,9 @@ void App::go()
             }
 
         }
+
+        // clear
+        m_Window.clear();
 
         // draw everything to render window
         for( std::vector<Drawable*>::iterator it = renderList.begin(); it != renderList.end(); ++it )

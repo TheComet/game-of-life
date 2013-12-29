@@ -7,50 +7,64 @@ if os.get() == "windows" then
 	
 	-- global header include directories
 	headerSearchDirs = {
-		"$(SFML_HOME)/include"
 	}
 	
 	-- lib include directories
 	libSearchDirs = {
-		"$(SFML_HOME)/lib"
 	}
 	
 	-- link libraries
-	linklibs_debug = {
-		"sfml-system",
-		"sfml-graphics"
+	linklibs_libgol_debug = {
 	}
-	linklibs_release = {
+	linklibs_libgol_release = {
+	}
+	linklibs_3D_debug = {
+	}
+	linklibs_3D_release = {
 	}
 
 elseif os.get() == "linux" then
 
 	-- header search directories
 	headerSearchDirs = {
-		"usr/local/include/",
+		"usr/local/include",
 		"usr/include",
-		"game-of-life"
+		"libgol"
 	}
 
 	-- lib include directories
 	libSearchDirs = {
 		"usr/local/lib",
-		"usr/lib"
+		"usr/lib",
+		"bin/debug",
+		"bin/release"
 	}
 
 	-- link libraries
-	linklibs_debug = {
+	linklibs_libgol_debug = {
+	}
+	linklibs_libgol_release = {
+	}
+	linklibs_2D_debug = {
 		"sfml-system",
 		"sfml-graphics"
 	}
-	linklibs_release = {
+	linklibs_2D_release = {
 		"sfml-system",
 		"sfml-graphics"
+	}
+	linklibs_3D_debug = {
+		"libgol"
+	}
+	linklibs_3D_release = {
+		"libgol"
 	}
 	linklibs_tests_debug = {
+		--"libgol",
 		"gmock"
 	}
 	linklibs_tests_release = {
+		--"libgol",
 		"gmock"
 	}
 
@@ -68,7 +82,8 @@ end
 -- Game of Life Solution
 -------------------------------------------------------------------
 
-solution "GameOfLife"
+solution "Game Of Life"
+
 	configurations { "Debug", "Release" }
 	location "build"
 	
@@ -85,20 +100,20 @@ solution "GameOfLife"
 	end
 
 	-------------------------------------------------------------------
-	-- Chocobun core
+	-- libgol (Game Of Life library)
 	-------------------------------------------------------------------
 	
-	project "Game"
-		kind "ConsoleApp"
+	project "libgol"
+		kind "SharedLib"
 		language "C++"
 		files {
-			"game-of-life/**.cpp",
-			"game-of-life/**.hpp",
-			"game-of-life/**.hxx"
+			"libgol/**.hpp",
+			"libgol/**.hxx",
+			"libgol/**.cpp"
 		}
 		
 		includedirs (headerSearchDirs)
-		
+
 		configuration "Debug"
 			if os.get() == "macosx" then -- very ugly hotfix to make shit work with OS X. If you know any better, please fix!
 				targetdir "bin/bin/debug"
@@ -106,6 +121,7 @@ solution "GameOfLife"
 				targetdir "bin/debug"
 			end
 			targetsuffix "_d"
+			implibdir "bin/lib"
 			defines {
 				"DEBUG",
 				"_DEBUG"
@@ -114,7 +130,106 @@ solution "GameOfLife"
 				"Symbols"
 			}
 			libdirs (libSearchDirs)
-			links (linklibs_debug)
+			links (linklibs_libgol_debug)
+
+		configuration "Release"
+			if os.get() == "macosx" then -- very ugly hotfix to make shit work with OS X. If you know any better, please fix!
+				targetdir "bin/bin/release"
+			else
+				targetdir "bin/release"
+			end
+			implibdir "bin/lib"
+			defines {
+				"NDEBUG"
+			}
+			flags {
+				"Optimize"
+			}
+			libdirs (libSearchDirs)
+			links (linklibs_libgol_release)
+
+	-------------------------------------------------------------------
+	-- 2D front end
+	-------------------------------------------------------------------
+
+	project "2D"
+		kind "ConsoleApp"
+		language "C++"
+		files {
+			"2D/**.cpp",
+			"2D/**.hpp",
+			"2D/**.hxx"
+		}
+
+		includedirs {
+			headerSearchDirs,
+			"2D"
+		}
+
+		configuration "Debug"
+			if os.get() == "macosx" then -- very ugly hotfix to make shit work on OS X. If you know any better, please fix!
+				targetdir "bin/bin/debug"
+			else
+				targetdir "bin/debug"
+			end
+			defines {
+				"DEBUG",
+				"_DEBUG"
+			}
+			flags {
+				"Symbols"
+			}
+			libdirs (libSearchDirs)
+			links (linklibs_2D_debug)
+
+		configuration "Release"
+			if os.get() == "macosx" then -- very ugly hotfix to make shit work with OS X. If you know any better, please fix!
+				targetdir "bin/bin/release"
+			else
+				targetdir "bin/release"
+			end
+			defines {
+				"NDEBUG"
+			}
+			flags {
+				"Optimize"
+			}
+			libdirs (libSearchDirs)
+			links (linklibs_2D_release)
+
+	-------------------------------------------------------------------
+	-- 3D front end
+	-------------------------------------------------------------------
+
+	project "3D"
+		kind "ConsoleApp"
+		language "C++"
+		files {
+			"3D/**.cpp",
+			"3D/**.hpp",
+			"3D/**.hxx"
+		}
+		
+		includedirs {
+			headerSearchDirs,
+			"3D"
+		}
+
+		configuration "Debug"
+			if os.get() == "macosx" then -- very ugly hotfix to make shit work with OS X. If you know any better, please fix!
+				targetdir "bin/bin/debug"
+			else
+				targetdir "bin/debug"
+			end
+			defines {
+				"DEBUG",
+				"_DEBUG"
+			}
+			flags {
+				"Symbols"
+			}
+			libdirs (libSearchDirs)
+			links (linklibs_3D_debug)
 			
 		configuration "Release"
 			if os.get() == "macosx" then -- very ugly hotfix to make shit work with OS X. If you know any better, please fix!
@@ -129,7 +244,7 @@ solution "GameOfLife"
 				"Optimize"
 			}
 			libdirs (libSearchDirs)
-			links (linklibs_release)
+			links (linklibs_3D_release)
 
 	-------------------------------------------------------------------
 	-- Unit tests
@@ -139,10 +254,14 @@ solution "GameOfLife"
 		kind "ConsoleApp"
 		language "C++"
 		files {
-			"game-of-life-tests/**.cpp"
+			"tests/**.cpp"
 		}
 
-		includedirs (headerSearchDirs)
+		includedirs {
+			headerSearchDirs,
+			"2D",
+			"3D"
+		}
 
 		configuration "Debug"
 			if os.get() == "macosx" then -- very ugly hotfix to make shit work with OS X. If you know any better, please fix!

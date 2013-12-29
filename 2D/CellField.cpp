@@ -74,43 +74,110 @@ void CellField::calculateNextFrame()
 {
 
     this->optimumArrayResize();
+    m_ActiveCellList[1].clear();
 
-    // calculate next frame by using the data in the old buffer
+    // calculate next frame by iterating over all active cells
+    for( std::vector<sf::Vector2i>::iterator it = m_ActiveCellList[0].begin(); it != m_ActiveCellList[0].end(); ++it )
+    {
+
+        // count neighbours
+        int neighbours = 0;
+        for( int nx = it->x-1; nx != it->x+2; ++nx )
+            for( int ny = it->y-1; ny != it->y+2; ++ny )
+                if( m_CellBuffer[0].at(nx,ny).isAlive() )
+                    ++neighbours;
+
+        // selected cell is alive
+        if( m_CellBuffer[0].at(it->x,it->y).isAlive() )
+        {
+
+            // counting algorithm above also counts selected cell.
+            // resolve this issue
+            --neighbours;
+
+            // less than 2 or more than 3 neighbours kills selected cell
+            if( neighbours < 2 || neighbours > 3 )
+                m_CellBuffer[1].at(it->x,it->y).kill();
+
+            // alive? add to active cell list
+            else
+                m_ActiveCellList[1].push_back( sf::Vector2i(it->x,it->y) );
+
+        // selected cell is dead
+        } else
+        {
+
+            // exactly 3 neighbours revives selected cell
+            if( neighbours == 3 )
+            {
+                m_CellBuffer[1].at(it->x,it->y).revive();
+                m_ActiveCellList[1].push_back( sf::Vector2i(it->x,it->y) );
+            }
+        }
+    }
+
+    // add surrounding dead cells to list as well
+    m_ActiveCellList[0] = m_ActiveCellList[1];
+    for( std::vector<sf::Vector2i>::iterator it = m_ActiveCellList[0].begin(); it != m_ActiveCellList[0].end(); ++it )
+        for( int nx = it->x-1; nx != it->x+2; ++nx )
+            for( int ny = it->y-1; ny != it->y+2; ++ny )
+                if( nx != it->x || ny != it->y && !m_CellBuffer[1].at(nx,ny).isAlive() )
+                {
+
+                    // check for duplicates
+                    bool add = true;
+                    for( std::vector<sf::Vector2i>::iterator it2 = m_ActiveCellList[1].begin(); it2 != m_ActiveCellList[1].end(); ++it2 )
+                        if( it2->x == nx && it2->y == ny )
+                        {
+                            add = false;
+                            break;
+                        }
+                    if( add )
+                        m_ActiveCellList[1].push_back( sf::Vector2i(nx,ny) );
+                }
+
+    std::cout << m_ActiveCellList[1].size() << std::endl;
+
+    // synchronize buffers and lists
+    m_CellBuffer[0] = m_CellBuffer[1];
+    m_ActiveCellList[0] = m_ActiveCellList[1];
+}
+
+// ----------------------------------------------------------------------------
+void CellField::regenerateActiveCellList()
+{
+    // generate list of active cells
+    // active cells are all cells that are alive and all dead cells surrounding
+    // any living cells
+    m_ActiveCellList[0].clear();
     for( int x = m_BoundaryX1+1; x != m_BoundaryX2; ++x )
         for( int y = m_BoundaryY1+1; y != m_BoundaryY2; ++y )
         {
 
-            // count neighbours
-            int neighbours = 0;
-            for( int nx = x-1; nx != x+2; ++nx )
-                for( int ny = y-1; ny != y+2; ++ny )
-                    if( m_CellBuffer[0].at(nx,ny).isAlive() )
-                        ++neighbours;
-
-            // selected cell is alive
+            // add living cell directly to list
             if( m_CellBuffer[0].at(x,y).isAlive() )
+                m_ActiveCellList[0].push_back( sf::Vector2i(x,y) );
+
+            // add dead cell if a living cell is its neighbour
+            else
             {
+                for( int nx = x-1; nx != x+2; ++nx )
+                {
+                    int ny;
+                    for( ny = y-1; ny != y+2; ++ny )
+                        if( m_CellBuffer[0].at(nx,ny).isAlive() )
+                            break;
+                    if( ny != y+2 )
+                    {
+                        m_ActiveCellList[0].push_back( sf::Vector2i(x,y) );
+                        break;
+                    }
+                }
 
-                // counting algorithm above also counts selected cell.
-                // resolve this issue
-                --neighbours;
-
-                // less than 2 or more than 3 neighbours kills selected cell
-                if( neighbours < 2 || neighbours > 3 )
-                    m_CellBuffer[1].at(x,y).kill();
-
-            // selected cell is dead
-            } else
-            {
-
-                // exactly 3 neighbours revives selected cell
-                if( neighbours == 3 )
-                    m_CellBuffer[1].at(x,y).revive();
             }
-        }
 
-    // synchronize buffers
-    m_CellBuffer[0] = m_CellBuffer[1];
+        }
+    m_ActiveCellList[1] = m_ActiveCellList[0];
 }
 
 // ----------------------------------------------------------------------------
@@ -192,24 +259,18 @@ void CellField::optimumArrayResize( bool forceResize )
     bool doResize = forceResize;
     for( int n = m_BoundaryX1; n != m_BoundaryX2; ++n )
     {
-        if( m_CellBuffer[0].at(n, m_BoundaryY1).isAlive() )
-            doResize = true;
-        if( m_CellBuffer[0].at(n, m_BoundaryY1+1).isAlive() )
-            doResize = true;
-        if( m_CellBuffer[0].at(n, m_BoundaryY2).isAlive() )
-            doResize = true;
-        if( m_CellBuffer[0].at(n, m_BoundaryY2-1).isAlive() )
+        if( m_CellBuffer[0].at(n, m_BoundaryY1).isAlive() ||
+            m_CellBuffer[0].at(n, m_BoundaryY1+1).isAlive() ||
+            m_CellBuffer[0].at(n, m_BoundaryY2).isAlive() ||
+            m_CellBuffer[0].at(n, m_BoundaryY2-1).isAlive() )
             doResize = true;
     }
     for( int n = m_BoundaryY1; n != m_BoundaryY2; ++n )
     {
-        if( m_CellBuffer[0].at(m_BoundaryX1, n).isAlive() )
-            doResize = true;
-        if( m_CellBuffer[0].at(m_BoundaryX1+1, n).isAlive() )
-            doResize = true;
-        if( m_CellBuffer[0].at(m_BoundaryX2, n).isAlive() )
-            doResize = true;
-        if( m_CellBuffer[0].at(m_BoundaryX2-1, n).isAlive() )
+        if( m_CellBuffer[0].at(m_BoundaryX1, n).isAlive() ||
+            m_CellBuffer[0].at(m_BoundaryX1+1, n).isAlive() ||
+            m_CellBuffer[0].at(m_BoundaryX2, n).isAlive() ||
+            m_CellBuffer[0].at(m_BoundaryX2-1, n).isAlive() )
             doResize = true;
     }
 

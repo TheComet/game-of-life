@@ -63,6 +63,14 @@ public:
     void calculatePreviousFrame();
 
     /*!
+     * @brief Forces generation of an internal list of active cells
+     * This is used to optimise the calculation of the next or previous
+     * generation, but should only be called after cells have been manipulated
+     * externally
+     */
+    void regenerateActiveCellList();
+
+    /*!
      * @brief Resets the field and frees all memory
      */
     void reset();
@@ -114,6 +122,7 @@ private:
     void expandArray( int x, int y );
 
     SignedArray2D<Cell> m_CellBuffer[2];
+    std::vector<sf::Vector2i> m_ActiveCellList[2];
 
     sf::Texture m_CellTexture;
     sf::Sprite m_CellSprite;
