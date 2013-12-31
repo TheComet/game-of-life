@@ -4,13 +4,25 @@
 
 -- Windows specific settings
 if os.get() == "windows" then
-	
+
+	-- where to export program
+	appDir_debug = "bin/debug"
+	appDir_release = "bin/release"
+
+	-- where to export DLL and import library
+	importLibDir_debug = "lib"
+	sharedLibDir_debug = "bin/debug"
+	importLibDir_release = "lib"
+	sharedLibDir_release = "bin/release"
+
 	-- global header include directories
 	headerSearchDirs = {
 	}
 	
 	-- lib include directories
 	libSearchDirs = {
+		importLibDir_debug,
+		importLibDir_release
 	}
 	
 	-- link libraries
@@ -25,6 +37,16 @@ if os.get() == "windows" then
 
 elseif os.get() == "linux" then
 
+	-- where to export program
+	appDir_debug = "bin/debug"
+	appDir_release = "bin/release"
+
+	-- where to export shared library
+	sharedLibDir_debug = "lib"
+	sharedLibDir_release = "lib"
+	importLibDir_debug = ""
+	importLibDir_release = ""
+
 	-- header search directories
 	headerSearchDirs = {
 		"usr/local/include",
@@ -36,8 +58,8 @@ elseif os.get() == "linux" then
 	libSearchDirs = {
 		"usr/local/lib",
 		"usr/lib",
-		"bin/debug",
-		"bin/release"
+		sharedLibDir_debug,
+		sharedLibDir_release
 	}
 
 	-- link libraries
@@ -71,7 +93,56 @@ elseif os.get() == "linux" then
 -- MAAAC
 elseif os.get() == "macosx" then
 
-	-- TODO
+	-- where to export program
+	appDir_debug = "bin/bin/debug" -- ugly hotfix to make shit work on OS X. If you know any better, please fix!
+	appDir_release = "bin/bin/release"
+
+	-- where to export shared library
+	sharedLibDir_debug = "lib/lib" -- also ugly hotfix
+	sharedLibDir_release = "lib/lib"
+	importLibDir_debug = ""
+	importLibDir_release = ""
+
+	-- header search directories
+	headerSearchDirs = {
+		"usr/include",
+		"libgol"
+	}
+
+	-- lib include directories
+	libSearchDirs = {
+		"usr/lib",
+		sharedLibDir_debug,
+		sharedLibDir_release
+	}
+
+	-- link libraries
+	linklibs_libgol_debug = {
+	}
+	linklibs_libgol_release = {
+	}
+	linklibs_2D_debug = {
+		"sfml-system",
+		"sfml-graphics"
+	}
+	linklibs_2D_release = {
+		"sfml-system",
+		"sfml-graphics"
+	}
+	linklibs_3D_debug = {
+		"libgol"
+	}
+	linklibs_3D_release = {
+		"libgol"
+	}
+	linklibs_tests_debug = {
+		--"libgol",
+		"gmock"
+	}
+	linklibs_tests_release = {
+		--"libgol",
+		"gmock"
+	}
 
 -- OS couldn't be determined
 else
@@ -103,7 +174,7 @@ solution "Game Of Life"
 	-- libgol (Game Of Life library)
 	-------------------------------------------------------------------
 	
-	project "libgol"
+	project "gol"
 		kind "SharedLib"
 		language "C++"
 		files {
@@ -115,13 +186,9 @@ solution "Game Of Life"
 		includedirs (headerSearchDirs)
 
 		configuration "Debug"
-			if os.get() == "macosx" then -- very ugly hotfix to make shit work with OS X. If you know any better, please fix!
-				targetdir "bin/bin/debug"
-			else
-				targetdir "bin/debug"
-			end
+			targetdir (sharedLibDir_debug)
+			implibdir (importLibDir_debug)
 			targetsuffix "_d"
-			implibdir "bin/lib"
 			defines {
 				"DEBUG",
 				"_DEBUG"
@@ -133,12 +200,8 @@ solution "Game Of Life"
 			links (linklibs_libgol_debug)
 
 		configuration "Release"
-			if os.get() == "macosx" then -- very ugly hotfix to make shit work with OS X. If you know any better, please fix!
-				targetdir "bin/bin/release"
-			else
-				targetdir "bin/release"
-			end
-			implibdir "bin/lib"
+			targetdir (sharedLibDir_release)
+			implibdir (importLibDir_release)
 			defines {
 				"NDEBUG"
 			}
@@ -167,11 +230,7 @@ solution "Game Of Life"
 		}
 
 		configuration "Debug"
-			if os.get() == "macosx" then -- very ugly hotfix to make shit work on OS X. If you know any better, please fix!
-				targetdir "bin/bin/debug"
-			else
-				targetdir "bin/debug"
-			end
+			targetdir (appDir_debug)
 			defines {
 				"DEBUG",
 				"_DEBUG"
@@ -183,11 +242,7 @@ solution "Game Of Life"
 			links (linklibs_2D_debug)
 
 		configuration "Release"
-			if os.get() == "macosx" then -- very ugly hotfix to make shit work with OS X. If you know any better, please fix!
-				targetdir "bin/bin/release"
-			else
-				targetdir "bin/release"
-			end
+			targetdir (appDir_release)
 			defines {
 				"NDEBUG"
 			}
@@ -216,11 +271,7 @@ solution "Game Of Life"
 		}
 
 		configuration "Debug"
-			if os.get() == "macosx" then -- very ugly hotfix to make shit work with OS X. If you know any better, please fix!
-				targetdir "bin/bin/debug"
-			else
-				targetdir "bin/debug"
-			end
+			targetdir (appDir_debug)
 			defines {
 				"DEBUG",
 				"_DEBUG"
@@ -232,11 +283,7 @@ solution "Game Of Life"
 			links (linklibs_3D_debug)
 			
 		configuration "Release"
-			if os.get() == "macosx" then -- very ugly hotfix to make shit work with OS X. If you know any better, please fix!
-				targetdir "bin/bin/release"
-			else
-				targetdir "bin/release"
-			end
+			targetdir (appDir_release)
 			defines {
 				"NDEBUG"
 			}
@@ -264,11 +311,7 @@ solution "Game Of Life"
 		}
 
 		configuration "Debug"
-			if os.get() == "macosx" then -- very ugly hotfix to make shit work with OS X. If you know any better, please fix!
-				targetdir "bin/bin/debug"
-			else
-				targetdir "bin/debug"
-			end
+			targetdir (appDir_debug)
 			defines {
 				"DEBUG",
 				"_DEBUG"
@@ -283,11 +326,7 @@ solution "Game Of Life"
 			}
 
 		configuration "Release"
-			if os.get() == "macosx" then -- very ugly hotfix to make shit work with OS X. If you know any better, please fix!
-				targetdir "bin/bin/release"
-			else
-				targetdir "bin/release"
-			end
+			targetdir (appDir_release)
 			defines {
 				"NDEBUG"
 			}
