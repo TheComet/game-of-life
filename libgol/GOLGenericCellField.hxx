@@ -27,11 +27,18 @@ GenericCellField<T>::~GenericCellField()
 template <class T>
 void GenericCellField<T>::addCell( const T& coordinate )
 {
+
+    // make sure cell at specified coordinates doesn't exist yet
     typename std::vector<T>::iterator it = std::lower_bound( m_CellList.begin(), m_CellList.end(), coordinate );
     if( it != m_CellList.end() )
         if( *it == coordinate )
             return;
+
+    // add
     m_CellList.insert( it, coordinate );
+
+    // process links
+    // TODO test performance: link cells with each other
 }
 
 // ----------------------------------------------------------------------------
@@ -53,13 +60,6 @@ bool GenericCellField<T>::isCellAlive( const T& coordinate )
         if( *it == coordinate )
             return true;
     return false;
-}
-
-// ----------------------------------------------------------------------------
-template <class T>
-void GenericCellField<T>::generateCellLinks()
-{
-
 }
 
 // ----------------------------------------------------------------------------
