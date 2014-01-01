@@ -32,7 +32,7 @@ public:
     /*!
      * @brief Default destructor
      */
-    ~Drawable();
+    virtual ~Drawable();
 
     /*!
      * @brief Draws the object to a render target
