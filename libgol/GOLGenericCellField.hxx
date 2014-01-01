@@ -29,13 +29,12 @@ void GenericCellField<T>::addCell( const T& coordinate )
 {
 
     // make sure cell at specified coordinates doesn't exist yet
-    typename std::vector<T>::iterator it = std::lower_bound( m_CellList.begin(), m_CellList.end(), coordinate );
+    typename SortedList<T>::iterator it = m_CellList.find( coordinate );
     if( it != m_CellList.end() )
-        if( *it == coordinate )
-            return;
+        return;
 
     // add
-    m_CellList.insert( it, coordinate );
+    m_CellList.insert( coordinate );
 
     // process links
     // TODO test performance: link cells with each other
@@ -45,20 +44,17 @@ void GenericCellField<T>::addCell( const T& coordinate )
 template <class T>
 void GenericCellField<T>::removeCell( const T& coordinate )
 {
-    typename std::vector<T>::iterator it = std::lower_bound( m_CellList.begin(), m_CellList.end(), coordinate );
+    typename SortedList<T>::iterator it = m_CellList.find( coordinate );
     if( it != m_CellList.end() )
-        if( *it == coordinate )
-            m_CellList.erase( it );
+        m_CellList.erase( it );
 }
 
 // ----------------------------------------------------------------------------
 template <class T>
 bool GenericCellField<T>::isCellAlive( const T& coordinate )
 {
-    typename std::vector<T>::iterator it = std::lower_bound( m_CellList.begin(), m_CellList.end(), coordinate );
-    if( it != m_CellList.end() )
-        if( *it == coordinate )
-            return true;
+    if( m_CellList.find( coordinate ) != m_CellList.end() )
+        return true;
     return false;
 }
 

@@ -5,7 +5,7 @@
 // ----------------------------------------------------------------------------
 // include files
 
-#include <vector>
+#include <GOLSortedList.hxx>
 
 namespace GOL {
 
@@ -33,7 +33,7 @@ public:
 
 private:
 
-    std::vector<T> m_CellList;
+    SortedList<T> m_CellList;
 };
 
 } // namespace GOL

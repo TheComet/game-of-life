@@ -225,26 +225,26 @@ std::size_t SortedList<T>::allocatedSize()
 
 // ----------------------------------------------------------------------------
 template <class T>
-T& SortedList<T>::at( std::size_t pos )
+T& SortedList<T>::at( std::size_t index )
 {
-    if( pos >= m_UsedSize )
+    if( index >= m_UsedSize )
     {
-        std::stringstream ss; ss << "[SortedList::operator[]] Error: Index out of bounds: " << pos << ", actual list size: " << m_UsedSize;
+        std::stringstream ss; ss << "[SortedList::operator[]] Error: Index out of bounds: " << index << ", actual list size: " << m_UsedSize;
         throw Exception( ss.str() );
     }
-    return m_Data[pos];
+    return m_Data[index];
 }
 
 // ----------------------------------------------------------------------------
 template <class T>
-const T& SortedList<T>::at( std::size_t pos ) const
+const T& SortedList<T>::at( std::size_t index ) const
 {
-    if( pos >= m_UsedSize )
+    if( index >= m_UsedSize )
     {
-        std::stringstream ss; ss << "[SortedList::operator[]] Error: Index out of bounds: " << pos << ", actual list size: " << m_UsedSize;
+        std::stringstream ss; ss << "[SortedList::operator[]] Error: Index out of bounds: " << index << ", actual list size: " << m_UsedSize;
         throw Exception( ss.str() );
     }
-    return m_Data[pos];
+    return m_Data[index];
 }
 
 // ----------------------------------------------------------------------------
@@ -276,23 +276,23 @@ const SortedList<T>& SortedList<T>::operator=( const SortedList<T>& that )
 
 // ----------------------------------------------------------------------------
 template <class T>
-T& SortedList<T>::operator[]( std::size_t pos )
+T& SortedList<T>::operator[]( std::size_t index )
 {
 #ifdef _DEBUG
-    return this->at(pos);
+    return this->at(index);
 #else
-    return m_Data[pos];
+    return m_Data[index];
 #endif
 }
 
 // ----------------------------------------------------------------------------
 template <class T>
-const T& SortedList<T>::operator[]( std::size_t pos ) const
+const T& SortedList<T>::operator[]( std::size_t index ) const
 {
 #ifdef _DEBUG
-    return this->at(pos);
+    return this->at(index);
 #else
-    return m_Data[pos];
+    return m_Data[index];
 #endif
 }
 

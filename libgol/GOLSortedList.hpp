@@ -24,7 +24,7 @@ public:
 
     /*!
      * @brief Constructs a sorted list with a specified pre-allocated chunk of memory
-     * @brief preallocate The amount of memory in sizeof(T) to allocate
+     * @param preallocate The amount of memory in sizeof(T) to allocate
      */
     SortedList( std::size_t preallocate );
 
@@ -42,21 +42,23 @@ public:
      * @brief Inserts an item into the sorted list
      * Will perform a binary search of all existing items in the list to
      * determine where to insert
-     * @brief item The item to insert
+     * @param item The item to insert
      */
     void insert( const T& item );
 
     /*!
      * @brief Erases an item from the list, shifting all data above it down
      * No memory re-allocation occurs during this process
-     * @param pos The item to erase
+     * @exception If the specified index in the list is out of bounds, an
+     * exception is thrown.
+     * @param index Index of the item to erase
      */
-    void erase( std::size_t pos );
+    void erase( std::size_t index );
 
     /*!
      * @brief Erases an item from the list, shifting all data above it down
      * No memory re-allocation occurs during this process
-     * @brief The item to erase
+     * @param it The item to erase
      */
     void erase( iterator it );
 
@@ -87,52 +89,63 @@ public:
 
     /*!
      * @brief Resizes the list and forces re-allocation of memory
+     * @param size The size to re-allocate
      */
     void resize( std::size_t size );
 
     /*!
      * @brief Returns a pointer to the beginning of the data in the list
+     * @return An iterator to the beginning of the data
      */
     iterator begin();
 
     /*!
      * @brief Returns a const pointer to the beginning of the data in the list
+     * @return A const iterator to the beginning of the data
      */
     const_iterator begin() const;
 
     /*!
      * @brief Returns a pointer to the end of the data in the list
+     * @return An iterator to the end of the data
      */
     iterator end();
 
     /*!
      * @brief Returns a const pointer to the end of the data in the list
+     * @return A const iterator to the end of the data
      */
     const_iterator end() const;
 
     /*!
      * @brief Returns the size of the list (how many items are currently inserted)
+     * @return The size of the list
      */
     std::size_t size();
 
     /*!
      * @brief Returns the amount of memory the list has allocated
+     * @return The allocated size of the list
      */
     std::size_t allocatedSize();
 
     /*!
      * @brief Returns a reference to the specified item in the list
-     * If the specified position in the list is out of bounds, an exception
-     * is thrown.
+     * @exception If the specified index in the list is out of bounds, an
+     * exception is thrown.
+     * @param index The index of the item
+     * @return A reference to the specified item
      */
-    T& at( std::size_t pos );
+    T& at( std::size_t index );
 
     /*!
      * @brief Returns a reference to the specified item in the list
-     * If the specified position in the list is out of bounds, an exception
-     * is thrown.
+     * @exception If the specified position in the list is out of bounds, an
+     * exception is thrown.
+     * @param index The index of the item
+     * @return A reference to the specified item
      */
-    const T& at( std::size_t pos ) const;
+    const T& at( std::size_t index ) const;
 
     /*!
      * @brief Overload assignment operator
@@ -144,14 +157,14 @@ public:
      * @note If _DEBUG is defined, this function calls @a at. If _DEBUG is not
      * defined, this function returns the data directly without bounds checking
      */
-    T& operator[]( std::size_t pos );
+    T& operator[]( std::size_t index );
 
     /*!
      * @brief Overload const subscript operator
      * @note If _DEBUG is defined, this function calls @a at. If _DEBUG is not
      * defined, this function returns the data directly without bounds checking
      */
-    const T& operator[]( std::size_t pos ) const;
+    const T& operator[]( std::size_t index ) const;
 
 private:
 
