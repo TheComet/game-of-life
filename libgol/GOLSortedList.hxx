@@ -57,14 +57,14 @@ void SortedList<T>::insert( const T& item )
 {
 
     // there are currently no itmes in the list
-    if( !m_Data )
+    /*if( !m_Data )
     {
         m_Data = new T[1];
         m_UsedSize = 1;
         m_AllocatedSize = 1;
         *m_Data = item;
         return;
-    }
+    }*/
 
     // get insert position
     std::size_t insertPos = this->findInsertPosition( item );
@@ -79,7 +79,8 @@ void SortedList<T>::insert( const T& item )
             temp[n] = m_Data[n];
         for( std::size_t n = insertPos; n != m_UsedSize-1; ++n )
             temp[n+1] = m_Data[n];
-        delete[] m_Data;
+        if( m_Data )
+            delete[] m_Data;
         m_Data = temp;
         m_Data[insertPos] = item;
 
@@ -123,6 +124,10 @@ void SortedList<T>::erase( SortedList<T>::iterator it )
 template <class T>
 std::size_t SortedList<T>::findInsertPosition( const T& item )
 {
+
+    // no data
+    if( !m_Data )
+        return 0;
 
     // binary search
     std::size_t foundPos = m_UsedSize >> 1;
