@@ -7,13 +7,19 @@
 
 #include <GOLGenericCellField.hpp>
 
-#include <algorithm>
-
 namespace GOL {
 
 // ----------------------------------------------------------------------------
 template <class T>
-GenericCellField<T>::GenericCellField()
+GenericCellField<T>::GenericCellField() :
+    m_Rule( Rule(2,3,3,3) ) // default Conway's rules
+{
+}
+
+// ----------------------------------------------------------------------------
+template <class T>
+GenericCellField<T>::GenericCellField( const Rule& rule ) :
+    m_Rule( rule )
 {
 }
 
@@ -60,16 +66,16 @@ bool GenericCellField<T>::isCellAlive( const T& coordinate )
 
 // ----------------------------------------------------------------------------
 template <class T>
-void GenericCellField<T>::calculateNextGeneration()
+void GenericCellField<T>::setRule( const Rule& rule )
 {
-
+    m_Rule = rule;
 }
 
 // ----------------------------------------------------------------------------
 template <class T>
-void GenericCellField<T>::calculatePreviousGeneration()
+const Rule& GenericCellField<T>::getRule() const
 {
-
+    return m_Rule;
 }
 
 } // namespace GOL
