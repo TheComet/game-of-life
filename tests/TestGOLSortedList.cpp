@@ -13,7 +13,7 @@
 
 #define TEST_CASE_NAME TestGOLSortedList
 #define TEST_CASE_OBJECT SortedList<int>
-
+/*
 using namespace GOL;
 
 TEST( TEST_CASE_NAME, ConstructAndDestruct )
@@ -341,3 +341,4 @@ TEST( TEST_CASE_NAME, AtExceptionOnIndexOutOfBounds )
     ASSERT_NO_THROW( test.at(0) );
     ASSERT_NO_THROW( test.at(1) );
 }
+*/

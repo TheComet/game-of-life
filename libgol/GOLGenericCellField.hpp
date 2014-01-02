@@ -49,6 +49,8 @@ public:
      */
     bool isCellAlive( const T& coordinate );
 
+    SortedList<T>& getActiveCellList() { return m_CellList[m_ActiveCellList]; }
+
     /*!
      * @brief Returns a reference to the lookup table of adjacent cells
      * The lookup table needs to be filled before generations can be computed.
@@ -80,8 +82,9 @@ public:
 protected:
 
     Rule            m_Rule;
-    SortedList<T>   m_CellList;
+    SortedList<T>   m_CellList[2];
     std::vector<T>  m_AdjacentCellLookupTable;
+    std::size_t     m_ActiveCellList;
 
 private:
 

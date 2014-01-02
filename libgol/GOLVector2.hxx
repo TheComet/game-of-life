@@ -2,6 +2,9 @@
 // GOLVector2.hxx
 // ----------------------------------------------------------------------------
 
+#ifndef __GOL_VECTOR2_HXX__
+#define __GOL_VECTOR2_HXX__
+
 // ----------------------------------------------------------------------------
 // include files
 
@@ -79,9 +82,9 @@ inline bool operator!=( const Vector2<T>& lhs, const Vector2<T>& rhs )
 template <class T>
 inline bool operator<( const Vector2<T>& lhs, const Vector2<T>& rhs )
 {
-    if( lhs.x>rhs.x ) return false;
+    if( lhs.x<rhs.x ) return true;
     if( lhs.y>rhs.y ) return false;
-    return true;
+    return lhs.y<rhs.y;
 }
 template <class T>
 inline bool operator>( const Vector2<T>& lhs, const Vector2<T>& rhs )
@@ -149,3 +152,5 @@ template <class T> inline Vector2<T> operator+( Vector2<T> lhs, const Vector2<T>
 template <class T> inline Vector2<T> operator-( Vector2<T> lhs, const Vector2<T>& rhs ) { lhs -= rhs; return lhs; }
 
 } // namespace GOL
+
+#endif // __GOL_VECTOR2_HXX__

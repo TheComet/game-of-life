@@ -56,18 +56,14 @@ template <class T>
 void SortedList<T>::insert( const T& item )
 {
 
-    // there are currently no itmes in the list
-    /*if( !m_Data )
-    {
-        m_Data = new T[1];
-        m_UsedSize = 1;
-        m_AllocatedSize = 1;
-        *m_Data = item;
-        return;
-    }*/
+    if( item.x == -1 && item.y == -1 )
+        int a = 5;
 
     // get insert position
     std::size_t insertPos = this->findInsertPosition( item );
+
+    if( insertPos > m_UsedSize )
+        int a = 5;
 
     // re-allocate if necessary
     if( m_UsedSize == m_AllocatedSize )
@@ -87,7 +83,7 @@ void SortedList<T>::insert( const T& item )
     // insert item without re-allocating
     }else
     {
-        for( std::size_t n = insertPos; n != m_UsedSize; ++n )
+        for( std::size_t n = insertPos; n < m_UsedSize; ++n )
             m_Data[n+1] = m_Data[n];
         m_Data[insertPos] = item;
         ++m_UsedSize;
@@ -134,7 +130,7 @@ std::size_t SortedList<T>::findInsertPosition( const T& item )
     std::size_t step = foundPos;
     do
     {
-        step = (step+(step&1)) >> 1;
+        step >>= 1;
         if( m_Data[foundPos] < item )
             foundPos += step;
         else
@@ -144,7 +140,7 @@ std::size_t SortedList<T>::findInsertPosition( const T& item )
     if( foundPos != 0 )
         if( m_Data[foundPos] > item )
             --foundPos;
-    if( foundPos != m_UsedSize )
+    if( foundPos < m_UsedSize )
         if( m_Data[foundPos] < item )
             ++foundPos;
     return foundPos;

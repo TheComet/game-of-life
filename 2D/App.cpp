@@ -88,7 +88,7 @@ void App::go()
             if( !isPaused && cellTimer++ >= simulationSpeed )
             {
                 cellTimer = 0;
-                cellField.calculateNextFrame();
+                cellField.calculateNextGeneration();
             }
 
             // limit amount of update loops allowed
@@ -124,16 +124,16 @@ void App::go()
                 // determine if further mouse movement should kill or revive cells
                 int cellX = std::floor( (static_cast<float>(event.mouseButton.x)/currentZoom-viewPosition.x)/10.0f );
                 int cellY = std::floor( (static_cast<float>(event.mouseButton.y)/currentZoom-viewPosition.y)/10.0f );
-                if( cellField.isCellAlive(cellX,cellY) )
+                if( cellField.isCellAlive(GOL::Vector2<int>(cellX,cellY)) )
                 {
                     mouseMoveKills = true;
-                    if( mouseButton1 && isPaused && cellField.isCellAlive(cellX,cellY) )
-                        cellField.toggleCell(cellX,cellY);
+                    if( mouseButton1 && isPaused && cellField.isCellAlive(GOL::Vector2<int>(cellX,cellY)) )
+                        cellField.addCell(GOL::Vector2<int>(cellX,cellY));
                 }else
                 {
                     mouseMoveKills = false;
-                    if( mouseButton1 && isPaused && !cellField.isCellAlive(cellX,cellY) )
-                        cellField.toggleCell(cellX,cellY);
+                    if( mouseButton1 && isPaused && !cellField.isCellAlive(GOL::Vector2<int>(cellX,cellY)) )
+                        cellField.removeCell(GOL::Vector2<int>(cellX,cellY));
                 }
 
                 // begin scrolling
@@ -181,14 +181,9 @@ void App::go()
                     int cellX = std::floor( (static_cast<float>(event.mouseMove.x)/currentZoom-viewPosition.x)/10.0f );
                     int cellY = std::floor( (static_cast<float>(event.mouseMove.y)/currentZoom-viewPosition.y)/10.0f );
                     if( mouseMoveKills )
-                    {
-                        if( cellField.isCellAlive(cellX,cellY) )
-                            cellField.toggleCell(cellX,cellY);
-                    }else
-                    {
-                        if( !cellField.isCellAlive(cellX,cellY) )
-                            cellField.toggleCell(cellX,cellY);
-                    }
+                        cellField.removeCell(GOL::Vector2<int>(cellX,cellY));
+                    else
+                        cellField.addCell(GOL::Vector2<int>(cellX,cellY));
                 }
 
             }
@@ -201,8 +196,6 @@ void App::go()
                 if( event.key.code == sf::Keyboard::Space )
                 {
                     isPaused = 1-isPaused;
-                    cellField.optimumArrayResize(true); // cleans up unnecessary array space
-                    cellField.regenerateActiveCellList(); // required after manipulating cells externally
                 }
 
                 // increase simulation speed

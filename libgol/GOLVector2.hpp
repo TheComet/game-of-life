@@ -2,6 +2,9 @@
 // GOLVector2.hpp
 // ----------------------------------------------------------------------------
 
+#ifndef __GOL_VECTOR2_HPP__
+#define __GOL_VECTOR2_HPP__
+
 namespace GOL {
 
 template <class T>
@@ -70,3 +73,5 @@ public:
 };
 
 } // namespace GOL
+
+#endif // __GOL_VECTOR2_HPP__
