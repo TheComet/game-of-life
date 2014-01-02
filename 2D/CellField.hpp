@@ -8,6 +8,8 @@
 #include <iostream>
 
 #include <Drawable.hpp>
+#include <SignedArray2D.hxx>
+#include <Cell.hpp>
 
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
