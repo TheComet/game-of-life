@@ -11,8 +11,7 @@ namespace GOL {
 
 // ----------------------------------------------------------------------------
 template <class T>
-GenericCellField<T>::GenericCellField() :
-    m_Rule( Rule(2,3,3,3) ) // default Conway's rules
+GenericCellField<T>::GenericCellField()
 {
 }
 
@@ -66,6 +65,13 @@ bool GenericCellField<T>::isCellAlive( const T& coordinate )
 
 // ----------------------------------------------------------------------------
 template <class T>
+std::vector<T>& GenericCellField<T>::getAdjacentCellLookupTable()
+{
+    return m_AdjacentCellLookupTable;
+}
+
+// ----------------------------------------------------------------------------
+template <class T>
 void GenericCellField<T>::setRule( const Rule& rule )
 {
     m_Rule = rule;
@@ -76,6 +82,20 @@ template <class T>
 const Rule& GenericCellField<T>::getRule() const
 {
     return m_Rule;
+}
+
+// ----------------------------------------------------------------------------
+template <class T>
+void GenericCellField<T>::calculateNextGeneration()
+{
+
+}
+
+// ----------------------------------------------------------------------------
+template <class T>
+void GenericCellField<T>::calculatePreviousGeneration()
+{
+
 }
 
 } // namespace GOL

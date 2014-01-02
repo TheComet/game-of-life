@@ -8,22 +8,14 @@
 #include <GOLSortedList.hxx>
 #include <GOLRule.hpp>
 
+#include <vector>
+
 namespace GOL {
 
 template <class T>
 class GenericCellField
 {
 public:
-
-    /*!
-     * @brief Default constructor
-     * Constructs a cell field using the default rules of Conway:
-     * - Any live cell with fewer than two live neighbours dies, as if caused by under-population.
-     * - Any live cell with two or three live neighbours lives on to the next generation.
-     * - Any live cell with more than three live neighbours dies, as if by overcrowding.
-     * - Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
-     */
-    GenericCellField();
 
     /*!
      * @brief Constructs a cell field using user defined rules
@@ -58,6 +50,12 @@ public:
     bool isCellAlive( const T& coordinate );
 
     /*!
+     * @brief Returns a reference to the lookup table of adjacent cells
+     * The lookup table needs to be filled before generations can be computed.
+     */
+    std::vector<T>& getAdjacentCellLookupTable();
+
+    /*!
      * @brief Sets new rules for this cell field
      * @param rule The new rule to use. See @a Rule for more information
      */
@@ -72,17 +70,25 @@ public:
     /*!
      * @brief Calculates the next generation of cells using the rules specified
      */
-    virtual void calculateNextGeneration() = 0;
+    void calculateNextGeneration();
 
     /*!
      * @brief Calculates the previous generation of cells using the rules specified
      */
-    virtual void calculatePreviousGeneration() = 0;
+    void calculatePreviousGeneration();
 
 protected:
 
     Rule            m_Rule;
     SortedList<T>   m_CellList;
+    std::vector<T>  m_AdjacentCellLookupTable;
+
+private:
+
+    /*!
+     * @brief Default constructor
+     */
+    GenericCellField();
 };
 
 } // namespace GOL

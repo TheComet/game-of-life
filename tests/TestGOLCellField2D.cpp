@@ -16,3 +16,4 @@
 #define TEST_CASE_OBJECT CellField2D
 
 using namespace GOL;
+
