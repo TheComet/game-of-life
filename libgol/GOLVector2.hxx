@@ -7,6 +7,8 @@
 
 #include <GOLVector2.hpp>
 
+#include <cmath>
+
 namespace GOL {
 
 // ----------------------------------------------------------------------------
@@ -33,14 +35,32 @@ Vector2<T>::~Vector2()
 
 // ----------------------------------------------------------------------------
 template <class T>
-const T Vector2<T>::dot() const
+void Vector2<T>::normalise()
+{
+    T length = sqrt( x*x + y*y );
+    x /= length;
+    y /= length;
+}
+
+// ----------------------------------------------------------------------------
+template <class T>
+Vector2<T> Vector2<T>::getNormalised() const
+{
+    Vector2 ret( *this );
+    ret.normalise();
+    return ret;
+}
+
+// ----------------------------------------------------------------------------
+template <class T>
+T Vector2<T>::dot() const
 {
     return (x*x + y*y );
 }
 
 // ----------------------------------------------------------------------------
 template <class T>
-const T Vector2<T>::dot( const Vector2<T>& other ) const
+T Vector2<T>::dot( const Vector2<T>& other ) const
 {
     return (x*other.x + y*other.y );
 }
@@ -78,5 +98,54 @@ inline bool operator>=( const Vector2<T>& lhs, const Vector2<T>& rhs )
 {
     return !operator<( lhs, rhs );
 }
+
+// ----------------------------------------------------------------------------
+template <class T>
+Vector2<T>& Vector2<T>::operator++()
+{
+    ++x;
+    ++y;
+    return *this;
+}
+template <class T>
+Vector2<T>& Vector2<T>::operator--()
+{
+    --x;
+    --y;
+    return *this;
+}
+template <class T>
+Vector2<T> Vector2<T>::operator++( int )
+{
+    Vector2<T> tmp( *this );
+    operator++();
+    return tmp;
+}
+template <class T>
+Vector2<T> Vector2<T>::operator--( int )
+{
+    Vector2<T> tmp( *this );
+    operator--();
+    return tmp;
+}
+
+// ----------------------------------------------------------------------------
+template <class T>
+Vector2<T>& Vector2<T>::operator+=( const Vector2<T>& rhs )
+{
+    x += rhs.x;
+    y += rhs.y;
+    return *this;
+}
+template <class T>
+Vector2<T>& Vector2<T>::operator-=( const Vector2<T>& rhs )
+{
+    x -= rhs.x;
+    y -= rhs.y;
+    return *this;
+}
+
+template <class T> inline Vector2<T> operator+( Vector2<T> lhs, const Vector2<T>& rhs ) { lhs += rhs; return lhs; }
+template <class T> inline Vector2<T> operator-( Vector2<T> lhs, const Vector2<T>& rhs ) { lhs -= rhs; return lhs; }
 
 } // namespace GOL

@@ -25,6 +25,16 @@ public:
     ~Vector3();
 
     /*!
+     * @brief Normalises the vector
+     */
+    void normalise();
+
+    /*!
+     * @brief Returns a new normalised version of the object without affecting the original
+     */
+    Vector3 getNormalised() const;
+
+    /*!
      * @brief Returns the dot product of the vector with itself
      */
     const T dot() const;
@@ -33,6 +43,19 @@ public:
      * @brief Returns the dot product of the vector with another vector
      */
     const T dot( const Vector3<T>& other ) const;
+
+    /*!
+     * @brief Calculates the cross product with another vector
+     * The result of this computation is stored in the original object, i.e. it
+     * modifies itself with the result
+     */
+    void cross( const Vector3<T>& other );
+
+    /*!
+     * @brief Returns the cross product with another vector without affecting the original object
+     * The result of this computation is returned and does not change the state of the object
+     */
+    Vector3<T> getCross( const Vector3<T>& other ) const;
 
     /*!
      * @brief Overload comparison operators
@@ -44,6 +67,16 @@ public:
     template <class T_> friend inline bool operator> ( const Vector3<T_>& lhs, const Vector3<T_>& rhs );
     template <class T_> friend inline bool operator<=( const Vector3<T_>& lhs, const Vector3<T_>& rhs );
     template <class T_> friend inline bool operator>=( const Vector3<T_>& lhs, const Vector3<T_>& rhs );
+
+    /*!
+     * @brief Overload arithmetic operators
+     */
+    Vector3<T>& operator++();
+    Vector3<T>& operator--();
+    Vector3<T> operator++( int );
+    Vector3<T> operator--( int );
+    Vector3<T>& operator+=( const Vector3<T>& rhs );
+    Vector3<T>& operator-=( const Vector3<T>& rhs );
 
     // 3D coordinates
     T x;
