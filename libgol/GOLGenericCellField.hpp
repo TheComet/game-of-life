@@ -79,7 +79,7 @@ public:
      */
     virtual void calculatePreviousGeneration() = 0;
 
-private:
+protected:
 
     Rule            m_Rule;
     SortedList<T>   m_CellList;

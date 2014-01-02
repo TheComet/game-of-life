@@ -22,9 +22,30 @@ class DerivedGenericCellField :
     public GenericCellField<int>
 {
 public:
+    DerivedGenericCellField() {}
+    ~DerivedGenericCellField() {}
+    DerivedGenericCellField( const Rule& rule ) : GenericCellField(rule) {}
     void calculateNextGeneration() {} // implement abstract functions
     void calculatePreviousGeneration() {}
 };
+
+TEST( TEST_CASE_NAME, DefaultRules )
+{
+    TEST_CASE_OBJECT test;
+    ASSERT_EQ( 2, test.getRule().getUnderpopulationThreshold() );
+    ASSERT_EQ( 3, test.getRule().getOverpopulationThreshold() );
+    ASSERT_EQ( 3, test.getRule().getLowerReproductionThreshold() );
+    ASSERT_EQ( 3, test.getRule().getUpperReproductionThreshold() );
+}
+
+TEST( TEST_CASE_NAME, CustomRules )
+{
+    TEST_CASE_OBJECT test( Rule(4,6,5,7) );
+    ASSERT_EQ( 4, test.getRule().getUnderpopulationThreshold() );
+    ASSERT_EQ( 6, test.getRule().getOverpopulationThreshold() );
+    ASSERT_EQ( 5, test.getRule().getLowerReproductionThreshold() );
+    ASSERT_EQ( 7, test.getRule().getUpperReproductionThreshold() );
+}
 
 TEST( TEST_CASE_NAME, AddAndRemoveCells )
 {

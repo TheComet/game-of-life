@@ -42,25 +42,25 @@ public:
     /*!
      * @brief Gets the underpopulation threshold
      */
-    inline unsigned int getUnderpopulationThreshold()
+    inline const unsigned int getUnderpopulationThreshold() const
     { return m_UnderpopulationThreshold; }
 
     /*!
      * @brief Gets the overpopluation threshold
      */
-    inline unsigned int getOverpopulationThreshold()
+    inline const unsigned int getOverpopulationThreshold() const
     { return m_OverpopulationThreshold; }
 
     /*!
      * @brief Gets the lower reproduction threshold
      */
-    inline unsigned int getLowerReproductionThreshold()
+    inline const unsigned int getLowerReproductionThreshold() const
     { return m_LowerReproductionThreshold; }
 
     /*!
      * @brief Gets the upper reproduction threshold
      */
-    inline unsigned int getUpperReproductionThreshold()
+    inline const unsigned int getUpperReproductionThreshold() const
     { return m_UpperReproductionThreshold; }
 
 private:
