@@ -96,4 +96,38 @@ TEST( TEST_CASE_NAME, CalculateNextGenerationUsingDefault2DRules )
     ASSERT_NE( true, test.isCellAlive(Vector2<int>( 1, 2)) );
     ASSERT_NE( true, test.isCellAlive(Vector2<int>( 2, 2)) );
 
+    // advance another generation
+    test.calculateNextGeneration();
+
+    // test pattern in a 5x5 block
+    ASSERT_NE( true, test.isCellAlive(Vector2<int>(-2,-2)) );
+    ASSERT_NE( true, test.isCellAlive(Vector2<int>(-1,-2)) );
+    ASSERT_EQ( true, test.isCellAlive(Vector2<int>( 0,-2)) );
+    ASSERT_NE( true, test.isCellAlive(Vector2<int>( 1,-2)) );
+    ASSERT_NE( true, test.isCellAlive(Vector2<int>( 2,-2)) );
+
+    ASSERT_NE( true, test.isCellAlive(Vector2<int>(-2,-1)) );
+    ASSERT_EQ( true, test.isCellAlive(Vector2<int>(-1,-1)) );
+    ASSERT_EQ( true, test.isCellAlive(Vector2<int>( 0,-1)) );
+    ASSERT_NE( true, test.isCellAlive(Vector2<int>( 1,-1)) );
+    ASSERT_NE( true, test.isCellAlive(Vector2<int>( 2,-1)) );
+
+    ASSERT_EQ( true, test.isCellAlive(Vector2<int>(-2, 0)) );
+    ASSERT_NE( true, test.isCellAlive(Vector2<int>(-1, 0)) );
+    ASSERT_NE( true, test.isCellAlive(Vector2<int>( 0, 0)) );
+    ASSERT_EQ( true, test.isCellAlive(Vector2<int>( 1, 0)) );
+    ASSERT_NE( true, test.isCellAlive(Vector2<int>( 2, 0)) );
+
+    ASSERT_NE( true, test.isCellAlive(Vector2<int>(-2, 1)) );
+    ASSERT_EQ( true, test.isCellAlive(Vector2<int>(-1, 1)) );
+    ASSERT_EQ( true, test.isCellAlive(Vector2<int>( 0, 1)) );
+    ASSERT_NE( true, test.isCellAlive(Vector2<int>( 1, 1)) );
+    ASSERT_NE( true, test.isCellAlive(Vector2<int>( 2, 1)) );
+
+    ASSERT_NE( true, test.isCellAlive(Vector2<int>(-2, 2)) );
+    ASSERT_NE( true, test.isCellAlive(Vector2<int>(-1, 2)) );
+    ASSERT_NE( true, test.isCellAlive(Vector2<int>( 0, 2)) );
+    ASSERT_NE( true, test.isCellAlive(Vector2<int>( 1, 2)) );
+    ASSERT_NE( true, test.isCellAlive(Vector2<int>( 2, 2)) );
+
 }

@@ -102,10 +102,11 @@ inline bool operator!=( const Vector3<T>& lhs, const Vector3<T>& rhs )
 template <class T>
 inline bool operator<( const Vector3<T>& lhs, const Vector3<T>& rhs )
 {
-    if( lhs.x>rhs.x ) return false;
-    if( lhs.y>rhs.y ) return false;
-    if( lhs.z>rhs.z ) return false;
-    return true;
+    if( lhs.x < rhs.x ) return true;
+    if( lhs.x > rhs.x ) return false;
+    if( lhs.y < rhs.y ) return true;
+    if( lhs.y > rhs.y ) return false;
+    return lhs.z < rhs.z;
 }
 template <class T>
 inline bool operator>( const Vector3<T>& lhs, const Vector3<T>& rhs )

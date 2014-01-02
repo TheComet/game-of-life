@@ -56,14 +56,8 @@ template <class T>
 void SortedList<T>::insert( const T& item )
 {
 
-    if( item.x == -1 && item.y == -1 )
-        int a = 5;
-
     // get insert position
     std::size_t insertPos = this->findInsertPosition( item );
-
-    if( insertPos > m_UsedSize )
-        int a = 5;
 
     // re-allocate if necessary
     if( m_UsedSize == m_AllocatedSize )
@@ -124,7 +118,10 @@ std::size_t SortedList<T>::findInsertPosition( const T& item )
     // no data
     if( !m_Data )
         return 0;
-
+    return std::lower_bound( m_Data, m_Data+m_UsedSize, item ) - m_Data;
+/* -----------------------
+   deprecated
+   -----------------------
     // binary search
     std::size_t foundPos = m_UsedSize >> 1;
     std::size_t step = foundPos;
@@ -143,19 +140,19 @@ std::size_t SortedList<T>::findInsertPosition( const T& item )
     if( foundPos < m_UsedSize )
         if( m_Data[foundPos] < item )
             ++foundPos;
-    return foundPos;
+    return foundPos;*/
 }
 
 // ----------------------------------------------------------------------------
 template <class T>
 typename SortedList<T>::iterator SortedList<T>::find( const T& item )
 {
-    std::size_t foundPos = this->findInsertPosition( item );
-    if( foundPos == m_UsedSize )
-        return m_Data+m_UsedSize;
-    if( m_Data[foundPos] != item )
-        foundPos = m_UsedSize;
-    return m_Data+foundPos;
+    T* foundPos = std::lower_bound( m_Data, m_Data+m_UsedSize, item );
+    if( foundPos == m_Data+m_UsedSize )
+        return foundPos;
+    if( *foundPos != item )
+        foundPos = m_Data+m_UsedSize;
+    return foundPos;
 }
 
 // ----------------------------------------------------------------------------

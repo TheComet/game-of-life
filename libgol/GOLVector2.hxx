@@ -82,9 +82,9 @@ inline bool operator!=( const Vector2<T>& lhs, const Vector2<T>& rhs )
 template <class T>
 inline bool operator<( const Vector2<T>& lhs, const Vector2<T>& rhs )
 {
-    if( lhs.x<rhs.x ) return true;
-    if( lhs.y>rhs.y ) return false;
-    return lhs.y<rhs.y;
+    if( lhs.x < rhs.x ) return true;
+    if( lhs.x > rhs.x ) return false;
+    return lhs.y < rhs.y;
 }
 template <class T>
 inline bool operator>( const Vector2<T>& lhs, const Vector2<T>& rhs )
