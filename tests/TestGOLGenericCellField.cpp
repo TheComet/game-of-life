@@ -16,7 +16,7 @@
 #define TEST_CASE_OBJECT GenericCellField<int>
 
 using namespace GOL;
-/*
+
 TEST( TEST_CASE_NAME, ConstructWithRules )
 {
     TEST_CASE_OBJECT test( Rule(4,6,5,7) );
@@ -44,4 +44,3 @@ TEST( TEST_CASE_NAME, AddAndRemoveCells )
     ASSERT_EQ( true, test.isCellAlive(9) );
 }
 
-*/

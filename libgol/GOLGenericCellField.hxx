@@ -91,22 +91,6 @@ template <class T>
 void GenericCellField<T>::calculateNextGeneration()
 {
 
-    std::cout << "alive cell lookup table" << std::endl;
-    for( typename std::vector<T>::iterator it = m_AdjacentCellLookupTable.begin();
-         it != m_AdjacentCellLookupTable.end();
-         ++it )
-    {
-        std::cout << it->x << "," << it->y << std::endl;
-    }
-
-    std::cout << "current frame" << std::endl;
-    for( typename SortedList<T>::iterator it = m_CellList[m_ActiveCellList].begin();
-         it != m_CellList[m_ActiveCellList].end();
-         ++it )
-    {
-        std::cout << it->x << "," << it->y << std::endl;
-    }
-
     // prepare target list
     std::size_t targetCellList = 1 - m_ActiveCellList;
     m_CellList[targetCellList].clear();
@@ -124,8 +108,6 @@ void GenericCellField<T>::calculateNextGeneration()
          ++it )
     {
 
-        std::cout << "processing living: " << it->x << "," << it->y << std::endl;
-
         // iterate over adjacent cells of currently selected cell
         unsigned int neighbours = 0;
         for( typename std::vector<T>::iterator adj_it = m_AdjacentCellLookupTable.begin();
@@ -133,47 +115,24 @@ void GenericCellField<T>::calculateNextGeneration()
              ++adj_it )
         {
             T adjacentCoordinate = *it + *adj_it;
-            std::cout << "    testing neighbour: " << adjacentCoordinate.x << "," << adjacentCoordinate.y << ", result: ";
 
             // adjacent cell is alive
             // count
             if( m_CellList[m_ActiveCellList].find(adjacentCoordinate) != m_CellList[m_ActiveCellList].end() )
-            {
-                std::cout << "yes" << std::endl;
                 ++neighbours;
 
 
             // adjacent cell is dead
             // add to potential revival list
-            }else{
+            else
                 revivalList.insert( adjacentCoordinate );
-                std::cout << "no" << std::endl;
-            }
         }
-
-        std::cout << "    total neighbours: " << neighbours << std::endl;
 
         // apply rules for underpopulation and overpopulation to determine if
         // this cell can live. If so, add to target list
         if( neighbours >= m_Rule.getUnderpopulationThreshold() &&
             neighbours <= m_Rule.getOverpopulationThreshold() )
             m_CellList[targetCellList].insert( *it );
-    }
-
-    std::cout << "target cell list after processing living" << std::endl;
-    for( typename SortedList<T>::iterator it = m_CellList[targetCellList].begin();
-         it != m_CellList[targetCellList].end();
-         ++it )
-    {
-        std::cout << it->x << "," << it->y << std::endl;
-    }
-
-    std::cout << "revival list" << std::endl;
-    for( typename SortedList<T>::iterator it = revivalList.begin();
-         it != revivalList.end();
-         ++it )
-    {
-        std::cout << it->x << "," << it->y << std::endl;
     }
 
     // iterate over all dead cells in revival list
@@ -201,15 +160,6 @@ void GenericCellField<T>::calculateNextGeneration()
 
     // swap active lists
     m_ActiveCellList = targetCellList;
-
-    std::cout << "target list frame after processing" << std::endl;
-    for( typename SortedList<T>::iterator it = m_CellList[m_ActiveCellList].begin();
-         it != m_CellList[m_ActiveCellList].end();
-         ++it )
-    {
-        std::cout << it->x << "," << it->y << std::endl;
-    }
-
 }
 
 // ----------------------------------------------------------------------------

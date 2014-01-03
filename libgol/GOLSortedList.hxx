@@ -57,7 +57,9 @@ void SortedList<T>::insert( const T& item )
 {
 
     // get insert position
-    std::size_t insertPos = this->findInsertPosition( item );
+    std::size_t insertPos = std::lower_bound( m_Data, m_Data+m_UsedSize, item ) - m_Data;
+    if( insertPos != m_UsedSize && m_Data[insertPos] == item )
+        return;
 
     // re-allocate if necessary
     if( m_UsedSize == m_AllocatedSize )

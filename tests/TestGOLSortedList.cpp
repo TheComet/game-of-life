@@ -59,6 +59,21 @@ TEST( TEST_CASE_NAME, InsertItemsAndGetItems )
     ASSERT_EQ( 10, test.at(9) );
 }
 
+TEST( TEST_CASE_NAME, InsertSameItems )
+{
+    TEST_CASE_OBJECT test;
+    test.insert(1);
+    test.insert(3);
+    test.insert(2);
+    test.insert(2);
+    test.insert(2);
+
+    ASSERT_EQ( 3, test.size() );
+    ASSERT_EQ( 1, test.at(0) );
+    ASSERT_EQ( 2, test.at(1) );
+    ASSERT_EQ( 3, test.at(2) );
+}
+
 TEST( TEST_CASE_NAME, EraseWithIndex )
 {
     TEST_CASE_OBJECT test;

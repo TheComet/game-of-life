@@ -47,6 +47,8 @@ TEST( TEST_CASE_NAME, CalculateNextGenerationUsingDefault2DRules )
     test.addCell( Vector2<int>( 0, 1) );
     test.addCell( Vector2<int>( 1,-1) );
 
+    ASSERT_EQ( 5, test.getActiveCellList().size() );
+
     /* below are the first three generations (0-2)
           **
          **
@@ -64,6 +66,9 @@ TEST( TEST_CASE_NAME, CalculateNextGenerationUsingDefault2DRules )
 
     // advance one generation
     test.calculateNextGeneration();
+
+    // test size
+    ASSERT_EQ( 6, test.getActiveCellList().size() );
 
     // test pattern in a 5x5 block
     ASSERT_NE( true, test.isCellAlive(Vector2<int>(-2,-2)) );
@@ -98,6 +103,9 @@ TEST( TEST_CASE_NAME, CalculateNextGenerationUsingDefault2DRules )
 
     // advance another generation
     test.calculateNextGeneration();
+
+    // test size
+    ASSERT_EQ( 7, test.getActiveCellList().size() );
 
     // test pattern in a 5x5 block
     ASSERT_NE( true, test.isCellAlive(Vector2<int>(-2,-2)) );
