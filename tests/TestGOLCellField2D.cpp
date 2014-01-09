@@ -12,7 +12,7 @@
 // --------------------------------------------------------------
 // define test fixtures
 
-#define TEST_CASE_NAME TestGOLCellFIeld2D
+#define TEST_CASE_NAME TestGOLCellField2D
 #define TEST_CASE_OBJECT CellField2D
 
 using namespace GOL;
