@@ -68,6 +68,10 @@ TEST( TEST_CASE_NAME, ComparisonOperators )
     ASSERT_NE( true, test1< test2 );
     ASSERT_EQ( true, test1>=test2 );
     ASSERT_NE( true, test1<=test2 );
+
+    Vector2<int> test3( 0, -2 );
+    Vector2<int> test4( 0, -2 );
+    ASSERT_EQ( true, test3==test4 );
 }
 
 TEST( TEST_CASE_NAME, PlusPlusPrefix )

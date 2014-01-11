@@ -9,6 +9,7 @@
 
 #include <Exception.hpp>
 #include <sstream>
+#include <algorithm>
 
 namespace GOL {
 
@@ -19,18 +20,23 @@ SortedList<T>::SortedList() :
     m_UsedSize(0),
     m_AllocatedSize(0)
 {
+    m_Data = new T[1];
+    m_UsedSize = 0;
+    m_AllocatedSize = 1;
 }
 
 // ----------------------------------------------------------------------------
 template <class T>
 SortedList<T>::SortedList( std::size_t preallocate ) :
     m_Data(0),
-    m_UsedSize(preallocate),
-    m_AllocatedSize(preallocate)
+    m_UsedSize(0),
+    m_AllocatedSize(0)
 {
     m_Data = new T[preallocate];
     for( std::size_t n = 0; n != preallocate; ++n )
         m_Data[n] = T();
+    m_UsedSize = preallocate;
+    m_AllocatedSize = preallocate;
 }
 
 // ----------------------------------------------------------------------------
@@ -40,6 +46,9 @@ SortedList<T>::SortedList( const SortedList<T>& that ) :
     m_UsedSize(0),
     m_AllocatedSize(0)
 {
+    m_Data = new T[1];
+    m_UsedSize = 0;
+    m_AllocatedSize = 1;
     *this = that;
 }
 
@@ -47,8 +56,7 @@ SortedList<T>::SortedList( const SortedList<T>& that ) :
 template <class T>
 SortedList<T>::~SortedList()
 {
-    if( m_Data )
-        delete[] m_Data;
+    delete[] m_Data;
 }
 
 // ----------------------------------------------------------------------------
@@ -58,31 +66,31 @@ void SortedList<T>::insert( const T& item )
 
     // get insert position
     std::size_t insertPos = std::lower_bound( m_Data, m_Data+m_UsedSize, item ) - m_Data;
-    if( insertPos != m_UsedSize && m_Data[insertPos] == item )
-        return;
+    if( insertPos != m_UsedSize )
+        if( m_Data[insertPos] == item )
+            return;
 
     // re-allocate if necessary
     if( m_UsedSize == m_AllocatedSize )
     {
-        ++m_AllocatedSize;
-        ++m_UsedSize;
-        T* temp = new T[m_UsedSize];
+        T* temp = new T[m_UsedSize+1];
         for( std::size_t n = 0; n != insertPos; ++n )
             temp[n] = m_Data[n];
-        for( std::size_t n = insertPos; n != m_UsedSize-1; ++n )
+        for( std::size_t n = insertPos; n != m_UsedSize; ++n )
             temp[n+1] = m_Data[n];
-        if( m_Data )
-            delete[] m_Data;
+        delete[] m_Data;
         m_Data = temp;
         m_Data[insertPos] = item;
+        ++m_AllocatedSize;
+        ++m_UsedSize;
 
     // insert item without re-allocating
     }else
     {
-        for( std::size_t n = insertPos; n < m_UsedSize; ++n )
-            m_Data[n+1] = m_Data[n];
-        m_Data[insertPos] = item;
         ++m_UsedSize;
+        for( std::size_t n = m_UsedSize; n > insertPos; --n )
+            m_Data[n] = m_Data[n-1];
+        m_Data[insertPos] = item;
     }
 }
 
@@ -117,9 +125,6 @@ template <class T>
 std::size_t SortedList<T>::findInsertPosition( const T& item )
 {
 
-    // no data
-    if( !m_Data )
-        return 0;
     return std::lower_bound( m_Data, m_Data+m_UsedSize, item ) - m_Data;
 /* -----------------------
    deprecated
@@ -149,7 +154,7 @@ std::size_t SortedList<T>::findInsertPosition( const T& item )
 template <class T>
 typename SortedList<T>::iterator SortedList<T>::find( const T& item )
 {
-    T* foundPos = std::lower_bound( m_Data, m_Data+m_UsedSize, item );
+    iterator foundPos = std::lower_bound( m_Data, m_Data+m_UsedSize, item );
     if( foundPos == m_Data+m_UsedSize )
         return foundPos;
     if( *foundPos != item )
@@ -272,6 +277,8 @@ const SortedList<T>& SortedList<T>::operator=( const SortedList<T>& that )
         m_AllocatedSize = that.m_UsedSize;
     }
     m_UsedSize = that.m_UsedSize;
+
+    return *this;
 }
 
 // ----------------------------------------------------------------------------

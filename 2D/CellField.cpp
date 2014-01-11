@@ -25,6 +25,16 @@ CellField::CellField() :
     m_CellTexture.loadFromImage( image, sf::IntRect(0,0,8,8) );
     m_CellTexture.setSmooth( true );
     m_CellSprite.setTexture( m_CellTexture );
+
+    // add adjacent lookup table for 2D
+    this->getAdjacentCellLookupTable().push_back( GOL::Vector2<int>(-1,-1) );
+    this->getAdjacentCellLookupTable().push_back( GOL::Vector2<int>(-1,-0) );
+    this->getAdjacentCellLookupTable().push_back( GOL::Vector2<int>(-1, 1) );
+    this->getAdjacentCellLookupTable().push_back( GOL::Vector2<int>( 0,-1) );
+    this->getAdjacentCellLookupTable().push_back( GOL::Vector2<int>( 0, 1) );
+    this->getAdjacentCellLookupTable().push_back( GOL::Vector2<int>( 1,-1) );
+    this->getAdjacentCellLookupTable().push_back( GOL::Vector2<int>( 1, 0) );
+    this->getAdjacentCellLookupTable().push_back( GOL::Vector2<int>( 1, 1) );
 }
 
 

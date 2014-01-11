@@ -103,7 +103,7 @@ void GenericCellField<T>::calculateNextGeneration()
     revivalList.clear();
 
     // debug information
-#define OUTPUT_CELL_DEBUG_INFORMATION
+//#define OUTPUT_CELL_DEBUG_INFORMATION
 #ifdef OUTPUT_CELL_DEBUG_INFORMATION
     std::cout << "adjacent cell lookup table:" << std::endl;
     for( typename std::vector<T>::iterator it = m_AdjacentCellLookupTable.begin(); it != m_AdjacentCellLookupTable.end(); ++it )
@@ -156,6 +156,11 @@ void GenericCellField<T>::calculateNextGeneration()
 
 #ifdef OUTPUT_CELL_DEBUG_INFORMATION
                 std::cout << ", alive: no" << std::endl;
+
+                std::cout << "        revival list size: " << revivalList.size() << std::endl;
+                std::cout << "        revival list dump:" << std::endl;
+                for( typename SortedList<T>::iterator it = revivalList.begin(); it != revivalList.end(); ++it )
+                    std::cout << "            " << it->x << "," << it->y << std::endl;
 #endif
             }
         }

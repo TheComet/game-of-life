@@ -90,6 +90,7 @@ private:
 
     /*!
      * @brief Default constructor
+     * Prevent construction without rules
      */
     GenericCellField();
 };

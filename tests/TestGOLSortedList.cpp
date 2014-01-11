@@ -20,7 +20,7 @@ TEST( TEST_CASE_NAME, ConstructAndDestruct )
 {
     TEST_CASE_OBJECT* test = new TEST_CASE_OBJECT();
     ASSERT_EQ( 0, test->size() );
-    ASSERT_EQ( 0, test->allocatedSize() );
+    ASSERT_EQ( 1, test->allocatedSize() );
     delete test;
 }
 
@@ -157,7 +157,16 @@ TEST( TEST_CASE_NAME, ClearItemsAndCheckAllocatedMemory )
 
     ASSERT_EQ( 0, test.size() );
     ASSERT_EQ( 4, test.allocatedSize() );
+}
 
+TEST( TEST_CASE_NAME, ClearItemsThenInsertLessThanAllocatedSizeAndCheckAllocatedMemory )
+{
+    TEST_CASE_OBJECT test;
+    test.insert(1);
+    test.insert(6);
+    test.insert(3);
+    test.insert(10);
+    test.clear();
     test.insert(5);
     test.insert(3);
     test.insert(4);
@@ -166,7 +175,19 @@ TEST( TEST_CASE_NAME, ClearItemsAndCheckAllocatedMemory )
     ASSERT_EQ( 3, test.at(0) );
     ASSERT_EQ( 4, test.at(1) );
     ASSERT_EQ( 5, test.at(2) );
+}
 
+TEST( TEST_CASE_NAME, ClearItemsThenInsertMoreThanAllocatedSizeAndCheckAllocatedMemory )
+{
+    TEST_CASE_OBJECT test;
+    test.insert(1);
+    test.insert(6);
+    test.insert(3);
+    test.insert(10);
+    test.clear();
+    test.insert(5);
+    test.insert(3);
+    test.insert(4);
     test.insert(9);
     test.insert(0);
     ASSERT_EQ( 5, test.size() );
