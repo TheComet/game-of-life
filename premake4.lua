@@ -88,7 +88,7 @@ elseif os.get() == "linux" then
 		"gmock"
 	}
 	linklibs_tests_release = {
-		"libgol",
+		"gol",
 		"gmock"
 	}
 
@@ -178,9 +178,10 @@ solution "Game Of Life"
 	-- libgol (Game Of Life library)
 	-------------------------------------------------------------------
 	
-	project "gol"
+	project "game of life library"
 		kind "SharedLib"
 		language "C++"
+		targetname "gol"
 		files {
 			"libgol/**.hpp",
 			"libgol/**.hxx",
@@ -188,6 +189,7 @@ solution "Game Of Life"
 		}
 		
 		includedirs (headerSearchDirs)
+		libdirs (libSearchDirs)
 
 		configuration "Debug"
 			targetdir (sharedLibDir_debug)
@@ -200,7 +202,6 @@ solution "Game Of Life"
 			flags {
 				"Symbols"
 			}
-			libdirs (libSearchDirs)
 			links (linklibs_libgol_debug)
 
 		configuration "Release"
@@ -212,7 +213,6 @@ solution "Game Of Life"
 			flags {
 				"Optimize"
 			}
-			libdirs (libSearchDirs)
 			links (linklibs_libgol_release)
 
 	-------------------------------------------------------------------

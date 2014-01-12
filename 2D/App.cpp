@@ -127,13 +127,13 @@ void App::go()
                 if( cellField.isCellAlive(GOL::Vector2<int>(cellX,cellY)) )
                 {
                     mouseMoveKills = true;
-                    if( mouseButton1 && isPaused && cellField.isCellAlive(GOL::Vector2<int>(cellX,cellY)) )
-                        cellField.addCell(GOL::Vector2<int>(cellX,cellY));
+                    if( mouseButton1 && isPaused )
+                        cellField.removeCell(GOL::Vector2<int>(cellX,cellY));
                 }else
                 {
                     mouseMoveKills = false;
-                    if( mouseButton1 && isPaused && !cellField.isCellAlive(GOL::Vector2<int>(cellX,cellY)) )
-                        cellField.removeCell(GOL::Vector2<int>(cellX,cellY));
+                    if( mouseButton1 && isPaused )
+                        cellField.addCell(GOL::Vector2<int>(cellX,cellY));
                 }
 
                 // begin scrolling
