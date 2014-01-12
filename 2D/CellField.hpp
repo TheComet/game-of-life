@@ -34,11 +34,6 @@ public:
     ~CellField();
 
     /*!
-     * @brief Resets the field and frees all memory
-     */
-    void reset();
-
-    /*!
      * @brief
      */
     void draw( sf::RenderTarget* target, sf::Vector2f viewSize, sf::Vector2f viewPosition, float zoomFactor );

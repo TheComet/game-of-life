@@ -49,11 +49,17 @@ public:
      */
     bool isCellAlive( const T& coordinate );
 
-    std::set<T>& getActiveCellList() { return m_CellList[m_ActiveCellList]; }
+    /*!
+     * @brief Returns the active cell list
+     * This can be used to iterate over all cells
+     */
+    const std::set<T>& getActiveCellList() const;
 
     /*!
      * @brief Returns a reference to the lookup table of adjacent cells
      * The lookup table needs to be filled before generations can be computed.
+     * This method can be used for that purpose, or can also be used to simply
+     * read the contents of the lookup table.
      */
     std::vector<T>& getAdjacentCellLookupTable();
 
@@ -78,6 +84,11 @@ public:
      * @brief Calculates the previous generation of cells using the rules specified
      */
     void calculatePreviousGeneration();
+
+    /*!
+     * @brief Resets the cellfield to contain no cells at all
+     */
+    void reset();
 
 protected:
 

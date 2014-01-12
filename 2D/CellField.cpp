@@ -43,11 +43,6 @@ CellField::~CellField()
 {
 }
 
-// ----------------------------------------------------------------------------
-void CellField::reset()
-{
-}
-
 
 // ----------------------------------------------------------------------------
 void CellField::draw( sf::RenderTarget* target, sf::Vector2f viewSize, sf::Vector2f viewPosition, float zoomFactor )

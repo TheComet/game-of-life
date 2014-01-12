@@ -62,6 +62,13 @@ bool GenericCellField<T>::isCellAlive( const T& coordinate )
 
 // ----------------------------------------------------------------------------
 template <class T>
+const std::set<T>& GenericCellField<T>::getActiveCellList() const
+{
+    return m_CellList[ m_ActiveCellList ];
+}
+
+// ----------------------------------------------------------------------------
+template <class T>
 std::vector<T>& GenericCellField<T>::getAdjacentCellLookupTable()
 {
     return m_AdjacentCellLookupTable;
@@ -153,6 +160,15 @@ template <class T>
 void GenericCellField<T>::calculatePreviousGeneration()
 {
 
+}
+
+// ----------------------------------------------------------------------------
+template <class T>
+void GenericCellField<T>::reset()
+{
+    m_CellList[0].clear();
+    m_CellList[1].clear();
+    m_ActiveCellList = 0;
 }
 
 } // namespace GOL
