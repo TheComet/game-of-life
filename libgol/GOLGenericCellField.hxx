@@ -11,9 +11,9 @@ namespace GOL {
 
 // ----------------------------------------------------------------------------
 template <class T>
-GenericCellField<T>::GenericCellField() :
-    m_ActiveCellList(0)
+GenericCellField<T>::GenericCellField()
 {
+    // canot be called because it's private
 }
 
 // ----------------------------------------------------------------------------
@@ -35,12 +35,7 @@ template <class T>
 void GenericCellField<T>::addCell( const T& coordinate )
 {
 
-    // make sure cell at specified coordinates doesn't exist yet
-    typename SortedList<T>::iterator it = m_CellList[m_ActiveCellList].find( coordinate );
-    if( it != m_CellList[m_ActiveCellList].end() )
-        return;
-
-    // add
+    // std::set won't insert if the element already exists
     m_CellList[m_ActiveCellList].insert( coordinate );
 
     // process links
@@ -51,7 +46,7 @@ void GenericCellField<T>::addCell( const T& coordinate )
 template <class T>
 void GenericCellField<T>::removeCell( const T& coordinate )
 {
-    typename SortedList<T>::iterator it = m_CellList[m_ActiveCellList].find( coordinate );
+    typename std::set<T>::iterator it = m_CellList[m_ActiveCellList].find( coordinate );
     if( it != m_CellList[m_ActiveCellList].end() )
         m_CellList[m_ActiveCellList].erase( it );
 }
@@ -91,40 +86,16 @@ template <class T>
 void GenericCellField<T>::calculateNextGeneration()
 {
 
-    // prepare target list
+    // prepare target list and post process list
     std::size_t targetCellList = 1 - m_ActiveCellList;
     m_CellList[targetCellList].clear();
-
-    // prepare revival list
-    // number of surrounding dead cells should approximately be alive*adjacentCount*0.8
-    // pre-allocate that amount of memory to decrease re-allocations
-    SortedList<T> revivalList;
-    revivalList.resize( m_CellList[m_ActiveCellList].size()*m_AdjacentCellLookupTable.size()*0.8 );
-    revivalList.clear();
-
-    // debug information
-//#define OUTPUT_CELL_DEBUG_INFORMATION
-#ifdef OUTPUT_CELL_DEBUG_INFORMATION
-    std::cout << "adjacent cell lookup table:" << std::endl;
-    for( typename std::vector<T>::iterator it = m_AdjacentCellLookupTable.begin(); it != m_AdjacentCellLookupTable.end(); ++it )
-        std::cout << "    " << it->x << "," << it->y << std::endl;
-
-    std::cout << "cell list dump:" << std::endl;
-    for( typename SortedList<T>::iterator it = m_CellList[m_ActiveCellList].begin();
-         it != m_CellList[m_ActiveCellList].end();
-         ++it )
-        std::cout << "    " << it->x << "," << it->y << std::endl;
-#endif
+    m_PostProcessCellList.clear();
 
     // iterate over all active cells in active list
-    for( typename SortedList<T>::iterator it = m_CellList[m_ActiveCellList].begin();
+    for( typename std::set<T>::iterator it = m_CellList[m_ActiveCellList].begin();
          it != m_CellList[m_ActiveCellList].end();
          ++it )
     {
-
-#ifdef OUTPUT_CELL_DEBUG_INFORMATION
-        std::cout << "selected cell: " << it->x << "," << it->y << std::endl;
-#endif
 
         // iterate over adjacent cells of currently selected cell
         unsigned int neighbours = 0;
@@ -134,40 +105,16 @@ void GenericCellField<T>::calculateNextGeneration()
         {
             T adjacentCoordinate = *it + *adj_it;
 
-#ifdef OUTPUT_CELL_DEBUG_INFORMATION
-            std::cout << "    adjacent cell: " << adjacentCoordinate.x << "," << adjacentCoordinate.y;
-#endif
-
             // adjacent cell is alive
             // count
             if( m_CellList[m_ActiveCellList].find(adjacentCoordinate) != m_CellList[m_ActiveCellList].end() )
-            {
                 ++neighbours;
-
-#ifdef OUTPUT_CELL_DEBUG_INFORMATION
-                std::cout << ", alive: yes" << std::endl;
-#endif
 
             // adjacent cell is dead
             // add to potential revival list
-            }else
-            {
-                revivalList.insert( adjacentCoordinate );
-
-#ifdef OUTPUT_CELL_DEBUG_INFORMATION
-                std::cout << ", alive: no" << std::endl;
-
-                std::cout << "        revival list size: " << revivalList.size() << std::endl;
-                std::cout << "        revival list dump:" << std::endl;
-                for( typename SortedList<T>::iterator it = revivalList.begin(); it != revivalList.end(); ++it )
-                    std::cout << "            " << it->x << "," << it->y << std::endl;
-#endif
-            }
+            else
+                m_PostProcessCellList.insert( adjacentCoordinate );
         }
-
-#ifdef OUTPUT_CELL_DEBUG_INFORMATION
-        std::cout << "    neighbours: " << neighbours << std::endl;
-#endif
 
         // apply rules for underpopulation and overpopulation to determine if
         // this cell can live. If so, add to target list
@@ -176,55 +123,19 @@ void GenericCellField<T>::calculateNextGeneration()
             m_CellList[targetCellList].insert( *it );
     }
 
-#ifdef OUTPUT_CELL_DEBUG_INFORMATION
-    std::cout << "new cell list dump after processing alive cells:" << std::endl;
-    for( typename SortedList<T>::iterator it = m_CellList[targetCellList].begin(); it != m_CellList[targetCellList].end(); ++it )
-        std::cout << "    " << it->x << "," << it->y << std::endl;
-
-    std::cout << "revival list size: " << revivalList.size() << std::endl;
-    std::cout << "revival list dump:" << std::endl;
-    for( typename SortedList<T>::iterator it = revivalList.begin(); it != revivalList.end(); ++it )
-        std::cout << "    " << it->x << "," << it->y << std::endl;
-#endif
-
     // iterate over all dead cells in revival list
-    for( typename SortedList<T>::iterator it = revivalList.begin();
-         it != revivalList.end();
+    for( typename std::set<T>::iterator it = m_PostProcessCellList.begin();
+         it != m_PostProcessCellList.end();
          ++it )
     {
-
-#ifdef OUTPUT_CELL_DEBUG_INFORMATION
-        std::cout << "selected cell: " << it->x << "," << it->y << std::endl;
-#endif
 
         // iterate over adjacent cells of currently selected cell and count alive neighbours
         unsigned int neighbours = 0;
         for( typename std::vector<T>::iterator adj_it = m_AdjacentCellLookupTable.begin();
              adj_it != m_AdjacentCellLookupTable.end();
              ++adj_it )
-        {
-#ifdef OUTPUT_CELL_DEBUG_INFORMATION
-            std::cout << "    adjacent cell: " << (*it+*adj_it).x << "," << (*it+*adj_it).y;
-#endif
             if( m_CellList[m_ActiveCellList].find(*it + *adj_it) != m_CellList[m_ActiveCellList].end() )
-            {
                 ++neighbours;
-#ifdef OUTPUT_CELL_DEBUG_INFORMATION
-                std::cout << ", alive: yes" << std::endl;
-#endif
-            }
-#ifdef OUTPUT_CELL_DEBUG_INFORMATION
-            else
-            {
-                std::cout << ", alive: no" << std::endl;
-            }
-#endif
-
-        }
-
-#ifdef OUTPUT_CELL_DEBUG_INFORMATION
-        std::cout << "    neighbours: " << neighbours << std::endl;
-#endif
 
         // apply reproduction rules to determine if this sell can be resurected.
         // if so, add to target list

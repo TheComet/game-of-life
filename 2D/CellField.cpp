@@ -53,7 +53,7 @@ void CellField::reset()
 void CellField::draw( sf::RenderTarget* target, sf::Vector2f viewSize, sf::Vector2f viewPosition, float zoomFactor )
 {
 
-    for( typename GOL::SortedList<GOL::Vector2<int> >::iterator it = this->getActiveCellList().begin();
+    for( typename std::set<GOL::Vector2<int> >::iterator it = this->getActiveCellList().begin();
          it != this->getActiveCellList().end();
          ++it )
     {

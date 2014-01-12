@@ -2,6 +2,9 @@
 #include <exception>
 #include <App.hpp>
 
+#include <GOLSortedList.hxx>
+#include <stdlib.h>
+
 int main()
 {
     App* theApp;

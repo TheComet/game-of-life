@@ -5,9 +5,9 @@
 // ----------------------------------------------------------------------------
 // include files
 
-#include <GOLSortedList.hxx>
 #include <GOLRule.hpp>
 
+#include <set>
 #include <vector>
 
 namespace GOL {
@@ -49,7 +49,7 @@ public:
      */
     bool isCellAlive( const T& coordinate );
 
-    SortedList<T>& getActiveCellList() { return m_CellList[m_ActiveCellList]; }
+    std::set<T>& getActiveCellList() { return m_CellList[m_ActiveCellList]; }
 
     /*!
      * @brief Returns a reference to the lookup table of adjacent cells
@@ -82,7 +82,8 @@ public:
 protected:
 
     Rule            m_Rule;
-    SortedList<T>   m_CellList[2];
+    std::set<T>     m_CellList[2];
+    std::set<T>     m_PostProcessCellList;
     std::vector<T>  m_AdjacentCellLookupTable;
     std::size_t     m_ActiveCellList;
 
