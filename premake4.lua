@@ -17,12 +17,16 @@ if os.get() == "windows" then
 
 	-- global header include directories
 	headerSearchDirs = {
+		"C:/dev/include",
+		"libgol"
 	}
 	
 	-- lib include directories
 	libSearchDirs = {
 		importLibDir_debug,
-		importLibDir_release
+		importLibDir_release,
+		"$(SFML_HOME)/lib",
+		"$(SFML_HOME)/bin"
 	}
 	
 	-- link libraries
@@ -30,10 +34,31 @@ if os.get() == "windows" then
 	}
 	linklibs_libgol_release = {
 	}
+	linklibs_2D_debug = {
+		"sfml-system",
+		"sfml-graphics",
+		"gol_d"
+	}
+	linklibs_2D_release = {
+		"sfml-system",
+		"sfml-graphics",
+		"gol"
+	}
 	linklibs_3D_debug = {
+		"gol_d"
 	}
 	linklibs_3D_release = {
+		"gol"
 	}
+	linklibs_tests_debug = {
+		"gol_d",
+		"gmock"
+	}
+	linklibs_tests_release = {
+		"gol",
+		"gmock"
+	}
+
 
 elseif os.get() == "linux" then
 
@@ -193,7 +218,7 @@ solution "Game Of Life"
 
 		configuration "Debug"
 			targetdir (sharedLibDir_debug)
-			implibdir (importLibDir_debug)
+			--implibdir (importLibDir_debug)
 			targetsuffix "_d"
 			defines {
 				"DEBUG",
@@ -206,7 +231,7 @@ solution "Game Of Life"
 
 		configuration "Release"
 			targetdir (sharedLibDir_release)
-			implibdir (importLibDir_release)
+			--implibdir (importLibDir_release)
 			defines {
 				"NDEBUG"
 			}
