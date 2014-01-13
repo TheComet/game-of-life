@@ -5,10 +5,15 @@
 #ifndef __GOL_VECTOR2_HPP__
 #define __GOL_VECTOR2_HPP__
 
+// ----------------------------------------------------------------------------
+// include files
+
+#include <GOLExport.hpp>
+
 namespace GOL {
 
 template <class T>
-class Vector2
+class LIB_GOL_API Vector2
 {
 public:
 

@@ -8,9 +8,11 @@
 // ----------------------------------------------------------------------------
 // include files
 
+#include <GOLExport.hpp>
+
 namespace GOL {
 
-class Rule
+class LIB_GOL_API Rule
 {
 public:
 

@@ -195,7 +195,7 @@ void App::go()
                 // pause/resume with space
                 if( event.key.code == sf::Keyboard::Space )
                 {
-                    isPaused = 1-isPaused;
+                    isPaused = !isPaused;
                 }
 
                 // increase simulation speed

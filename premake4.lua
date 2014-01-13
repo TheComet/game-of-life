@@ -35,12 +35,14 @@ if os.get() == "windows" then
 	linklibs_libgol_release = {
 	}
 	linklibs_2D_debug = {
-		"sfml-system",
-		"sfml-graphics",
+		"sfml-system-d",
+		"sfml-window-d",
+		"sfml-graphics-d",
 		"gol_d"
 	}
 	linklibs_2D_release = {
 		"sfml-system",
+		"sfml-window",
 		"sfml-graphics",
 		"gol"
 	}
@@ -200,6 +202,12 @@ solution "Game Of Life"
 		}
 	end
 
+	-- Library configurations
+	defines {
+		"LIB_GOL_DYNAMIC",
+		"SFML_DYNAMIC"
+	}
+
 	-------------------------------------------------------------------
 	-- libgol (Game Of Life library)
 	-------------------------------------------------------------------
@@ -219,7 +227,7 @@ solution "Game Of Life"
 
 		configuration "Debug"
 			targetdir (sharedLibDir_debug)
-			--implibdir (importLibDir_debug)
+			implibdir (importLibDir_debug)
 			targetsuffix "_d"
 			defines {
 				"DEBUG",
@@ -232,7 +240,7 @@ solution "Game Of Life"
 
 		configuration "Release"
 			targetdir (sharedLibDir_release)
-			--implibdir (importLibDir_release)
+			implibdir (importLibDir_release)
 			defines {
 				"NDEBUG"
 			}

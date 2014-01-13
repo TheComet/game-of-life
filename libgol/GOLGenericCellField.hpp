@@ -6,6 +6,7 @@
 // include files
 
 #include <GOLRule.hpp>
+#include <GOLExport.hpp>
 
 #include <set>
 #include <vector>
@@ -13,7 +14,7 @@
 namespace GOL {
 
 template <class T>
-class GenericCellField
+class LIB_GOL_API GenericCellField
 {
 public:
 

@@ -2,10 +2,15 @@
 // GOLVector3.hpp
 // ----------------------------------------------------------------------------
 
+// ----------------------------------------------------------------------------
+// include files
+
+#include <GOLExport.hpp>
+
 namespace GOL {
 
 template <class T>
-class Vector3
+class LIB_GOL_API Vector3
 {
 public:
 

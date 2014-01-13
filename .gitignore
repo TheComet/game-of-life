@@ -15,6 +15,7 @@
 # generated project files
 build/
 bin/
+lib/
 
 # temporary files
 *.swp
