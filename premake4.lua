@@ -49,9 +49,10 @@ elseif os.get() == "linux" then
 
 	-- header search directories
 	headerSearchDirs = {
-		"usr/local/include",
-		"usr/include",
-		"libgol"
+		"/usr/local/include",
+		"/usr/include",
+		"libgol",
+		"/usr/local/include/wx-3.0"
 	}
 
 	-- lib include directories
