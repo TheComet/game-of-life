@@ -97,11 +97,13 @@ elseif os.get() == "linux" then
 	}
 	linklibs_2D_debug = {
 		"sfml-system",
+		"sfml-window",
 		"sfml-graphics",
 		"gol_d"
 	}
 	linklibs_2D_release = {
 		"sfml-system",
+		"sfml-window",
 		"sfml-graphics",
 		"gol"
 	}
@@ -153,11 +155,13 @@ elseif os.get() == "macosx" then
 	}
 	linklibs_2D_debug = {
 		"sfml-system",
+		"sfml-window",
 		"sfml-graphics",
 		"gol_d"
 	}
 	linklibs_2D_release = {
 		"sfml-system",
+		"sfml-window",
 		"sfml-graphics",
 		"gol"
 	}
