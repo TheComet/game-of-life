@@ -1,21 +1,15 @@
-#include <iostream>
-#include <cmath>
-
-#include <App.hpp>
-#include <LoopTimer.hpp>
-#include <Background.hpp>
-#include <CellField.hpp>
-
-#include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp>
-#include <SFML/System/Vector2.hpp>
-#include <SFML/Window/Keyboard.hpp>
-
-#include <vector>
+// ----------------------------------------------------------------------------
+// App.cpp
+// ----------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------
-App::App() :
-    m_Window( sf::VideoMode(800,600), "Game of Life" )
+// include files
+
+#include <App.hpp>
+#include <MainFrame.hpp>
+
+// ----------------------------------------------------------------------------
+App::App()
 {
 }
 
@@ -25,9 +19,14 @@ App::~App()
 }
 
 // ----------------------------------------------------------------------------
-void App::go()
+bool App::OnInit()
 {
 
+    MainFrame* mainFrame = new MainFrame;
+    mainFrame->Show();
+    return true;
+
+/*
     // list of objects to render every frame
     std::vector<Drawable*> renderList;
 
@@ -68,7 +67,7 @@ void App::go()
     loopTimer.setFPS( 60 );
 
     // run the program as long as the window is open
-    while (m_Window.isOpen())
+    while( m_Window.isOpen() )
     {
 
         // update game logic
@@ -225,5 +224,5 @@ void App::go()
 
         // end the current frame
         m_Window.display();
-    }
+    }*/
 }

@@ -1,20 +1,16 @@
 // ----------------------------------------------------------------------------
 // include files
 
-#include <SFML/Graphics/RenderWindow.hpp>
+#include <wx/app.h>
 
-namespace sf {
-    class RenderWindow;
-}
-
-class App
+class App :
+    public wxApp
 {
 public:
 
     App();
     ~App();
-    void go();
-private:
-
-    sf::RenderWindow m_Window;
+    virtual bool OnInit();
 };
+
+IMPLEMENT_APP( App );

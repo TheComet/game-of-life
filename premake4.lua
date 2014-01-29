@@ -1,3 +1,5 @@
+dofile "use_wxwidgets.lua"
+
 -------------------------------------------------------------------
 -- Game of Life build script
 -------------------------------------------------------------------
@@ -79,7 +81,24 @@ elseif os.get() == "linux" then
 		"/usr/local/include",
 		"/usr/include",
 		"libgol",
-		"/usr/local/include/wx-3.0"
+		"/usr/local/include/wx-3.0",
+		-- TODO use pkg-config instead
+		--"`pkg-config --cflags gtk+-2.0 gtk+-unix-print-2.0 glib-2.0 gobject-2.0 gdk-pixbuf-2.0`"
+		"/usr/include/gtk-2.0",
+		"/usr/lib/i386-linux-gnu/gtk-2.0/include",
+		"/usr/include/atk-1.0",
+		"/usr/include/cairo",
+		"/usr/include/gdk-pixbuf-2.0",
+		"/usr/include/pango-1.0",
+		"/usr/include/gio-unix-2.0/",
+		"/usr/include/glib-2.0",
+		"/usr/lib/i386-linux-gnu/glib-2.0/include",
+		"/usr/include/pixman-1",
+		"/usr/include/freetype2",
+		"/usr/include/libpng12",
+		"/usr/include/gtk-unix-print-2.0",
+		"/usr/include/gdk-pixbuf-2.0",
+		"/usr/include/libpng12"
 	}
 
 	-- lib include directories
@@ -216,7 +235,7 @@ solution "Game Of Life"
 	-- libgol (Game Of Life library)
 	-------------------------------------------------------------------
 	
-	project "game of life library"
+	project "GoL-lib"
 		kind "SharedLib"
 		language "C++"
 		targetname "gol"
@@ -270,6 +289,7 @@ solution "Game Of Life"
 			headerSearchDirs,
 			"2D"
 		}
+		wx_config { Unicode="yes", Version="3.0", Libs="core" }
 
 		configuration "Debug"
 			targetdir (appDir_debug)
