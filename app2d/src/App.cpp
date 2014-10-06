@@ -112,7 +112,7 @@ bool App::OnInit()
             // handle zooming
             if( event.type == sf::Event::MouseWheelMoved )
             {
-                targetZoom += event.mouseWheel.delta/50.0f;
+                targetZoom += event.mouseWheel.delta/20.0f;
                 if( targetZoom >= zoomLimitMax ) targetZoom = zoomLimitMax;
                 if( targetZoom <= zoomLimitMin ) targetZoom = zoomLimitMin;
             }
@@ -221,7 +221,7 @@ bool App::OnInit()
         }
 
         // clear
-        //m_Window.clear();
+        m_Window.clear();
 
         // draw everything to render window
         for( std::vector<Drawable*>::iterator it = renderList.begin(); it != renderList.end(); ++it )
