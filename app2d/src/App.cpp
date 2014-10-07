@@ -230,4 +230,6 @@ bool App::OnInit()
         // end the current frame
         m_Window.display();
     }
+
+	return true;
 }

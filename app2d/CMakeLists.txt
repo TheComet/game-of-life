@@ -34,6 +34,10 @@ set (COMMON_CMAKE_ARGS
 	-DCMAKE_LIBRARY_PATH=${EXTERNAL_DEP_DIR}/lib
 )
 
+set (SFML_LIB_SUFFIX "")
+if (CMAKE_BUILD_TYPE MATCHES "Debug")
+	set (SFML_LIB_SUFFIX "-d")
+endif ()
 find_package (SFML 2 COMPONENTS
 	system
 	window
@@ -55,8 +59,8 @@ else ()
 		CMAKE_ARGS ${COMMON_CMAKE_ARGS}
 	)
 	target_link_libraries (app2d
-		sfml-system
-		sfml-window
-		sfml-graphics
+		sfml-system${SFML_LIB_SUFFIX}
+		sfml-window${SFML_LIB_SUFFIX}
+		sfml-graphics${SFML_LIB_SUFFIX}
 	)
 endif ()
