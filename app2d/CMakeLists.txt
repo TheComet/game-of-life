@@ -64,3 +64,8 @@ else ()
 		sfml-graphics${SFML_LIB_SUFFIX}
 	)
 endif ()
+
+add_dependencies (app2d
+	SFML_PROJECT
+	gol
+)
