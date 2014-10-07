@@ -60,3 +60,8 @@ else ()
 		sfml-graphics
 	)
 endif ()
+
+add_dependencies (app2d
+	SFML_PROJECT
+	gol
+)
