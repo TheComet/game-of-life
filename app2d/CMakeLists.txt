@@ -35,7 +35,7 @@ set (COMMON_CMAKE_ARGS
 )
 
 set (SFML_LIB_SUFFIX "")
-if (CMAKE_BUILD_TYPE MATCHES "Debug")
+if (CMAKE_BUILD_TYPE MATCHES "Debug" AND MSVC)
 	set (SFML_LIB_SUFFIX "-d")
 endif ()
 find_package (SFML 2 COMPONENTS
